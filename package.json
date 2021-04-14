@@ -18,5 +18,10 @@
   },
   "engines": {
     "node": "10"
+  },
+  "dependencies": {
+    "dayjs": "^1.10.4",
+    "mathjs": "^9.3.2",
+    "nanoid": "^3.1.22"
   }
 }
