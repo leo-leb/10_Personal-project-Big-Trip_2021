@@ -56,3 +56,10 @@ export const SortType = {
   PRICE: 'Price',
   OFFERS: 'Offers',
 };
+
+export const ButtonType = {
+  OPEN: 'Open',
+  CLOSE: 'Close',
+  DELETE: 'Delete',
+  CANCEL: 'Cancel',
+};

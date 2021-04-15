@@ -1,10 +1,44 @@
-import {getFullDateSlashAndTime} from './common';
-import {createAvailableOffer} from './offers-available';
-import {createEventType} from './event-type';
-import {renderList} from '../common';
-import {EventType} from '../const';
+import {createButtonRollUp} from '../common-templates/btn-roll-up.template';
 
-export const createEventsEdit = (event) => {
+import {getFullDateSlashAndTime} from '../../utils/transform';
+import {createElements} from '../../utils/render';
+import {EventType, ButtonType} from '../../consts';
+
+const createOfferTemplate = (offer) => {
+  const {title, price} = offer;
+
+  return `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}">
+    <label class="event__offer-label" for="event-offer-${title}-1">
+      <span class="event__offer-title">${title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${price}</span>
+    </label>
+  </div>`;
+};
+
+const createTypeTemplate = (type) => {
+  const lowerType = type.toLowerCase();
+
+  return `<div class="event__type-item">
+    <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${lowerType}>
+    <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${type}</label>
+  </div>`;
+};
+
+const createPhotosTemplate = (destination) => {
+  return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${createElements(destination.pictures.map((pic) => pic.src), (src) => {return `<img class="event__photo" src=${src} alt="Event photo">`;})}
+    </div>
+  </div>`;
+};
+
+const createResetButtonTemplate = (type) => {
+  return `<button class="event__reset-btn" type="reset">${type}</button>`;
+};
+
+export const createEventFormTemplate = (event, isAdd) => {
   const {base_price, date_from, date_to, destination, type, offers} = event;
 
   return `<li class="trip-events__item">
@@ -20,7 +54,7 @@ export const createEventsEdit = (event) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${renderList(Object.values(EventType), createEventType)}
+              ${createElements(Object.values(EventType), createTypeTemplate)}
             </fieldset>
           </div>
         </div>
@@ -54,19 +88,18 @@ export const createEventsEdit = (event) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${isAdd ? createResetButtonTemplate(ButtonType.CANCEL) : createResetButtonTemplate(ButtonType.DELETE)}
+        ${isAdd ? '' : createButtonRollUp(ButtonType.CLOSE)}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">${renderList(offers, createAvailableOffer)}</div>
+          <div class="event__available-offers">${createElements(offers, createOfferTemplate)}</div>
         </section>
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destination.description}</p>
+          ${!isAdd ? '' : createPhotosTemplate(destination)}
         </section>
       </section>
     </form>
