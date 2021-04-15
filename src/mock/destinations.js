@@ -1,4 +1,4 @@
-import {getRandomPictures, getRandomParagraph} from './common';
+import {getRandomPictures, getRandomParagraph} from './utils';
 
 const DESC_LIMIT = 5;
 const PIC_LIMIT = 5;

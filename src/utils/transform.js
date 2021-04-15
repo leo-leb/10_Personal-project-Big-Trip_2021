@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import {TimePrefix, TimeMeterInMinutes as TimeMeter} from '../const';
+import {TimePrefix, TimeMeterInMinutes as TimeMeter} from '../consts';
 
 const getTimeToString = (time) => {
   const modifiedTime = time.toString();

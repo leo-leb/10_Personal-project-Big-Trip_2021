@@ -1,4 +1,4 @@
-import {getRandomOffers} from './common';
+import {getRandomOffers} from './utils';
 
 const PRICE_LIMIT = 500;
 
