@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render';
+import {createElement} from 'Utils/render';
 
 const createNavigationTemplate = () => {
   return `<nav class="trip-controls__trip-tabs  trip-tabs">

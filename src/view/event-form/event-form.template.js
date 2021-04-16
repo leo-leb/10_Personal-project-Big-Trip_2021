@@ -1,8 +1,8 @@
 import {createButtonRollUp} from '../common-templates/btn-roll-up.template';
 
-import {getFullDateSlashAndTime} from '../../utils/transform';
-import {createElements} from '../../utils/render';
-import {EventType, ButtonType} from '../../consts';
+import {getFullDateSlashAndTime} from 'Utils/transform';
+import {createElements} from 'Utils/render';
+import {EventType, ButtonType} from 'consts';
 
 const createOfferTemplate = (offer) => {
   const {title, price} = offer;

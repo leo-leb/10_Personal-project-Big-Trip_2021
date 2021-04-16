@@ -1,5 +1,5 @@
 import {createInfoTemplate} from './info.template';
-import {createElement} from '../../utils/render';
+import {createElement} from 'Utils/render';
 
 export default class Info {
   constructor(trip) {

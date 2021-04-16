@@ -1,4 +1,4 @@
-import {createElements} from '../../utils/render';
+import {createElements} from 'Utils/render';
 
 const createFilterItemTemplate = (filter) => {
   return `<div class="trip-filters__filter">

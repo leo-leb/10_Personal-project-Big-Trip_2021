@@ -1,4 +1,4 @@
-import {RenderPosition} from '../consts';
+import {RenderPosition} from 'consts';
 
 export const createElement = (template) => {
   const newElement = document.createElement('div');
@@ -14,6 +14,8 @@ export const render = (container, element, place) => {
     case RenderPosition.BEFOREEND:
       container.append(element);
       break;
+    default:
+      container.append(element);
   }
 };
 

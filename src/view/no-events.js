@@ -1,14 +1,16 @@
-import {createSortTemplate} from './sort.template';
 import {createElement} from 'Utils/render';
 
-export default class Sort {
-  constructor(sorts) {
-    this._sorts = sorts;
+const createNoEventsTemplate = () => {
+  return '<p class="trip-events__msg">Click New Event to create your first point</p>';
+};
+
+export default class NoEvents {
+  constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createSortTemplate(this._sorts);
+    return createNoEventsTemplate();
   }
 
   getElement() {

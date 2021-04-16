@@ -1,5 +1,5 @@
 import {createEventFormTemplate} from './event-form.template';
-import {createElement} from '../../utils/render';
+import {createElement} from 'Utils/render';
 
 export default class EventForm {
   constructor(event, isAdd) {

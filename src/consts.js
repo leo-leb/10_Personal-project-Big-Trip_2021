@@ -63,3 +63,8 @@ export const ButtonType = {
   DELETE: 'Delete',
   CANCEL: 'Cancel',
 };
+
+export const KeyCode = {
+  ESC: 'Escape',
+  ENTER: 'Enter',
+};
