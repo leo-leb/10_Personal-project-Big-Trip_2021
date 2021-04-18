@@ -1,4 +1,4 @@
-import {RenderPosition} from './consts';
+import {RenderPosition} from 'consts';
 
 export const createElement = (template) => {
   const newElement = document.createElement('div');

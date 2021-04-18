@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid';
 import {getRandomValue, getRandomInteger, getRandomNumber} from './utils';
 import {getOffers} from './offers';
 import {getDestinations} from './destinations';
-import {EventType, TimeMeter} from '../consts';
+import {EventType, TimeMeter} from 'consts';
 
 const {YEAR, MONTHES, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS} = TimeMeter;
 

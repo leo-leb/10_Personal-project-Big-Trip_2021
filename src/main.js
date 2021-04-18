@@ -1,15 +1,16 @@
-import InfoView from './view/info/info';
-import NavigationView from './view/navigation';
-import FilterView from './view/filter/filter';
-import SortView from './view/sort/sort';
-import EventListView from './view/event-list';
-import EventItemView from './view/event-item/event-item';
-import EventFormView from './view/event-form/event-form';
+import InfoView from 'View/info/info';
+import NavigationView from 'View/navigation';
+import FilterView from 'View/filter/filter';
+import SortView from 'View/sort/sort';
+import EventListView from 'View/event-list';
+import EventItemView from 'View/event-item/event-item';
+import EventFormView from 'View/event-form/event-form';
+import NoEventsView from 'View/no-events';
 
-import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType} from './consts';
-import {render} from './utils/render';
+import {render} from 'Utils/render';
+import {generateEvent} from 'Mock/event';
 
-import {generateEvent} from './mock/event';
+import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType, KeyCode} from 'consts';
 
 const headerElement = document.querySelector('.page-header');
 const infoElement = headerElement.querySelector('.trip-main');
@@ -36,15 +37,35 @@ const renderEvent = (eventItem, eventList, isAdd) => {
   const replaceCardToForm = () => eventList.replaceChild(eventForm.getElement(), event.getElement());
   const replaceFormToCard = () => eventList.replaceChild(event.getElement(), eventForm.getElement());
 
-  event.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => replaceCardToForm());
+  const onEscKeyDown = (evt) => {
+    if (evt.key === KeyCode.ESC) {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  event.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replaceCardToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  eventForm.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replaceFormToCard();
+    document.removeEventListener('keydown', onEscKeyDown);
+  });
+
   eventForm.getElement().querySelector('form').addEventListener('submit', (evt) => {
     evt.preventDefault();
     replaceFormToCard();
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 
   render(eventList, event.getElement(), RenderPosition.BEFOREEND);
 };
 
-for (const event of trip) {
-  renderEvent(event, eventList.getElement(), false);
+if (trip.length !== 0) {
+  trip.forEach((event) => renderEvent(event, eventList.getElement(), false));
+} else {
+  render(eventList.getElement(), new NoEventsView().getElement(), RenderPosition.BEFOREEND);
 }
