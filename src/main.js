@@ -7,7 +7,8 @@ import EventItemView from 'View/event-item/event-item';
 import EventFormView from 'View/event-form/event-form';
 import NoEventsView from 'View/no-events';
 
-import {render} from 'Utils/render';
+import {render, replace} from 'Utils/render';
+import {isEscEvent} from 'Utils/event';
 import {generateEvent} from 'Mock/event';
 
 import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType, KeyCode} from 'consts';
@@ -24,48 +25,46 @@ const trip = events.slice(0, EVENT_COUNT);
 
 const eventList = new EventListView();
 
-render(infoElement, new InfoView(trip).getElement(), RenderPosition.AFTERBEGIN);
-render(menuElement, new NavigationView().getElement(), RenderPosition.BEFOREEND);
-render(filterElement, new FilterView(FilterType).getElement(), RenderPosition.BEFOREEND);
-render(tripEventsElement, new SortView(SortType).getElement(), RenderPosition.BEFOREEND);
-render(tripEventsElement, eventList.getElement(), RenderPosition.BEFOREEND);
+render(infoElement, new InfoView(trip), RenderPosition.AFTERBEGIN);
+render(menuElement, new NavigationView(), RenderPosition.BEFOREEND);
+render(filterElement, new FilterView(FilterType), RenderPosition.BEFOREEND);
+render(tripEventsElement, new SortView(SortType), RenderPosition.BEFOREEND);
+render(tripEventsElement, eventList, RenderPosition.BEFOREEND);
 
 const renderEvent = (eventItem, eventList, isAdd) => {
   const event = new EventItemView(eventItem);
   const eventForm = new EventFormView(eventItem, isAdd);
 
-  const replaceCardToForm = () => eventList.replaceChild(eventForm.getElement(), event.getElement());
-  const replaceFormToCard = () => eventList.replaceChild(event.getElement(), eventForm.getElement());
+  const replaceCardToForm = () => replace(eventForm, event);
+  const replaceFormToCard = () => replace(event, eventForm);
 
-  const onEscKeyDown = (evt) => {
-    if (evt.key === KeyCode.ESC) {
-      evt.preventDefault();
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    }
+  const setFormEscHandler = () => {
+    replaceFormToCard();
+    document.removeEventListener('keydown', onFormEsc);
   };
 
-  event.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  const onFormEsc = (evt) => isEscEvent(evt, setFormEscHandler());
+
+  event.setArrowClickHandler(() => {
     replaceCardToForm();
-    document.addEventListener('keydown', onEscKeyDown);
+    document.addEventListener('keydown', onFormEsc);
   });
 
-  eventForm.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  eventForm.setArrowClickHandler(() => {
     replaceFormToCard();
-    document.removeEventListener('keydown', onEscKeyDown);
+    document.removeEventListener('keydown', onFormEsc);
   });
 
-  eventForm.getElement().querySelector('form').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  eventForm.setFormSubmitHandler(() => {
     replaceFormToCard();
-    document.removeEventListener('keydown', onEscKeyDown);
+    document.removeEventListener('keydown', onFormEsc);
   });
 
-  render(eventList, event.getElement(), RenderPosition.BEFOREEND);
+  render(eventList, event, RenderPosition.BEFOREEND);
 };
 
-if (trip.length !== 0) {
+if (trip.length) {
   trip.forEach((event) => renderEvent(event, eventList.getElement(), false));
 } else {
-  render(eventList.getElement(), new NoEventsView().getElement(), RenderPosition.BEFOREEND);
+  render(eventList.getElement(), new NoEventsView(), RenderPosition.BEFOREEND);
 }

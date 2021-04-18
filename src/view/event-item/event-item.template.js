@@ -1,4 +1,4 @@
-import {createButtonRollUp} from '../common-templates/btn-roll-up.template';
+import {createButtonRollUp} from 'View/common-templates/btn-roll-up.template';
 
 import {getFullDate, getShortDate, getFullDateAndTime, getTime, getTimeDuration} from 'Utils/transform';
 import {createElements} from 'Utils/render';

@@ -1,27 +1,38 @@
+import AbstractView from 'View/abstract';
 import {createEventFormTemplate} from './event-form.template';
-import {createElement} from 'Utils/render';
 
-export default class EventForm {
+export default class EventForm extends AbstractView {
   constructor(event, isAdd) {
+    super();
+
     this._event = event;
     this._isAdd = isAdd;
 
-    this._element = null;
+    this._arrowClickHandler = this._arrowClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createEventFormTemplate(this._event, this._isAdd);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _arrowClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.arrowClick();
   }
 
-  removeElement() {
-    this._element = null;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setArrowClickHandler(callback) {
+    this._callback.arrowClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._arrowClickHandler);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 }
