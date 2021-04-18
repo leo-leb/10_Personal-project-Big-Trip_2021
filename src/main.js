@@ -11,7 +11,7 @@ import {render, replace} from 'Utils/render';
 import {isEscEvent} from 'Utils/event';
 import {generateEvent} from 'Mock/event';
 
-import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType, KeyCode} from 'consts';
+import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType} from 'consts';
 
 const headerElement = document.querySelector('.page-header');
 const infoElement = headerElement.querySelector('.trip-main');
