@@ -1,4 +1,4 @@
-import AbstractView from 'View/abstract';
+import AbstractView from '@view/abstract';
 import {createFilterTemplate} from './filter.template';
 
 export default class Filter extends AbstractView {

@@ -1,15 +1,15 @@
-import InfoView from 'View/info/info';
-import NavigationView from 'View/navigation';
-import FilterView from 'View/filter/filter';
-import SortView from 'View/sort/sort';
-import EventListView from 'View/event-list';
-import EventItemView from 'View/event-item/event-item';
-import EventFormView from 'View/event-form/event-form';
-import NoEventsView from 'View/no-events';
+import InfoView from '@view/info/info';
+import NavigationView from '@view/navigation';
+import FilterView from '@view/filter/filter';
+import SortView from '@view/sort/sort';
+import EventListView from '@view/event-list';
+import EventItemView from '@view/event-item/event-item';
+import EventFormView from '@view/event-form/event-form';
+import NoEventsView from '@view/no-events';
 
-import {render, replace} from 'Utils/render';
-import {isEscEvent} from 'Utils/event';
-import {generateEvent} from 'Mock/event';
+import {render, replace} from '@utils/render';
+import {isEscEvent} from '@utils/event';
+import {generateEvent} from '@mock/event';
 
 import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType} from 'consts';
 

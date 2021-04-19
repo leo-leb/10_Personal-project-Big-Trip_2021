@@ -1,4 +1,4 @@
-import AbstractView from 'View/abstract';
+import AbstractView from '@view/abstract';
 import {createSortTemplate} from './sort.template';
 
 export default class Sort extends AbstractView {

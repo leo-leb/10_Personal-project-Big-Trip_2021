@@ -1,4 +1,4 @@
-import AbstractView from 'View/abstract';
+import AbstractView from '@view/abstract';
 import {createEventItemTemplate} from './event-item.template';
 
 export default class EventItem extends AbstractView {

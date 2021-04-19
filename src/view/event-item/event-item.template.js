@@ -1,7 +1,6 @@
-import {createButtonRollUp} from 'View/common-templates/btn-roll-up.template';
-
-import {getFullDate, getShortDate, getFullDateAndTime, getTime, getTimeDuration} from 'Utils/transform';
-import {createElements} from 'Utils/render';
+import {createButtonRollUp} from '@view/common-templates/btn-roll-up.template';
+import {getFullDate, getShortDate, getFullDateAndTime, getTime, getTimeDuration} from '@utils/transform';
+import {createElements} from '@utils/render';
 import {ButtonType} from 'consts';
 
 const createOfferTemplate = (offer) => {
