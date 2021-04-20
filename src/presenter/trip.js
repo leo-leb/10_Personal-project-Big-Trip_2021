@@ -5,16 +5,19 @@ import NoEventsView from '@view/no-events';
 import EventPresenter from '@presenter/event';
 
 import {render} from '@utils/render';
+import {updateItem} from '@utils/common';
 import {RenderPosition, SortType} from 'consts';
 
 export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
+    this._eventPresenter = {};
 
     this._sortComponent = new SortView(SortType);
     this._eventListContainerComponent = new EventListContainerView();
     this._noEventsComponent = new NoEventsView();
-    this._eventPresenter = {};
+
+    this._handleEventDataChange = this._handleEventDataChange.bind(this);
   }
 
   init(trip) {
@@ -32,7 +35,7 @@ export default class Trip {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListContainerComponent);
+    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleEventDataChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -55,5 +58,10 @@ export default class Trip {
     }
 
     this._renderNoEvents();
+  }
+
+  _handleEventDataChange(updatedEvent) {
+    this._trip = updateItem(this._trip, updatedEvent);
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 }

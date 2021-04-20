@@ -23,5 +23,4 @@ render(menuElement, new NavigationView(), RenderPosition.BEFOREEND);
 render(filterElement, new FilterView(FilterType), RenderPosition.BEFOREEND);
 
 const tripPresenter = new TripPresenter(tripEventsElement);
-
 tripPresenter.init(trip);

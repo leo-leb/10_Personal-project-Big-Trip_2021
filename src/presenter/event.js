@@ -6,11 +6,14 @@ import {isEscEvent} from '@utils/event';
 import {RenderPosition} from 'consts';
 
 export default class Event {
-  constructor(container) {
+  constructor(container, changeEventData) {
     this._eventContainer = container;
+    this._changeEventData = changeEventData;
 
     this._itemComponent = null;
     this._formComponent = null;
+
+    this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
 
     this._handleItemRollUpClick = this._handleItemRollUpClick.bind(this);
     this._handleFormRollUpClick = this._handleFormRollUpClick.bind(this);
@@ -20,12 +23,15 @@ export default class Event {
   }
 
   init(event) {
+    this._event = event;
+
     const prevItemComponent = this._itemComponent;
     const prevFormComponent = this._formComponent;
 
     this._itemComponent = new EventItemView(event);
     this._formComponent = new EventFormView(event, false);
 
+    this._itemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._itemComponent.setRollUpClickHandler(this._handleItemRollUpClick);
     this._formComponent.setRollUpClickHandler(this._handleFormRollUpClick);
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
@@ -60,6 +66,18 @@ export default class Event {
     document.removeEventListener('keydown', this._handleFormEsc);
   }
 
+  _handleItemFavoriteClick() {
+    this._changeEventData(
+      Object.assign(
+        {},
+        this._event,
+        {
+          is_favorite: !this._event.is_favorite,
+        },
+      ),
+    );
+  }
+
   _handleItemRollUpClick() {
     this._replaceItemToForm();
     document.addEventListener('keydown', this._handleFormEsc);
@@ -69,7 +87,8 @@ export default class Event {
     this._replaceFormToItem();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(event) {
+    this._changeEventData(event);
     this._replaceFormToItem();
     document.removeEventListener('keydown', this._handleFormEsc);
   }
