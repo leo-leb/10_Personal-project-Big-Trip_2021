@@ -1,8 +1,8 @@
 import SortView from '@view/sort/sort';
-import EventListView from '@view/event-list';
+import EventListContainerView from '@view/event-list-container';
 import NoEventsView from '@view/no-events';
 
-import PointPresenter from '@presenter/point';
+import EventPresenter from '@presenter/event';
 
 import {render} from '@utils/render';
 import {RenderPosition, SortType} from 'consts';
@@ -12,9 +12,9 @@ export default class Trip {
     this._tripContainer = tripContainer;
 
     this._sortComponent = new SortView(SortType);
-    this._eventListComponent = new EventListView();
+    this._eventListContainerComponent = new EventListContainerView();
     this._noEventsComponent = new NoEventsView();
-    this._pointPresenter = {};
+    this._eventPresenter = {};
   }
 
   init(trip) {
@@ -27,30 +27,30 @@ export default class Trip {
     render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderEventsList() {
-    render(this._tripContainer, this._eventListComponent, RenderPosition.BEFOREEND);
+  _renderEventListContainer() {
+    render(this._tripContainer, this._eventListContainerComponent, RenderPosition.BEFOREEND);
   }
 
   _renderEvent(event) {
-    const pointPresenter = new PointPresenter(this._eventListComponent);
-    pointPresenter.init(event);
-    this._pointPresenter[event.id] = pointPresenter;
+    const eventPresenter = new EventPresenter(this._eventListContainerComponent);
+    eventPresenter.init(event);
+    this._eventPresenter[event.id] = eventPresenter;
   }
 
-  _renderEvents() {
+  _renderEventList() {
     this._trip.forEach((event) => this._renderEvent(event));
   }
 
   _renderNoEvents() {
-    render(this._eventListComponent, this._noEventsComponent, RenderPosition.BEFOREEND);
+    render(this._eventListContainerComponent, this._noEventsComponent, RenderPosition.BEFOREEND);
   }
 
   _renderTrip() {
     this._renderSort();
-    this._renderEventsList();
+    this._renderEventListContainer();
 
     if (this._trip.length) {
-      this._renderEvents();
+      this._renderEventList();
       return;
     }
 

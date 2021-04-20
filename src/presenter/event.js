@@ -2,18 +2,19 @@ import EventItemView from '@view/event-item/event-item';
 import EventFormView from '@view/event-form/event-form';
 
 import {render, replace, remove} from '@utils/render';
-import {RenderPosition} from 'consts';
 import {isEscEvent} from '@utils/event';
+import {RenderPosition} from 'consts';
 
-export default class Point {
+export default class Event {
   constructor(container) {
     this._eventContainer = container;
 
     this._itemComponent = null;
     this._formComponent = null;
 
-    this._handleArrowClickOnItem = this._handleArrowClickOnItem.bind(this);
-    this._handleArrowClickOnForm = this._handleArrowClickOnForm.bind(this);
+    this._handleItemRollUpClick = this._handleItemRollUpClick.bind(this);
+    this._handleFormRollUpClick = this._handleFormRollUpClick.bind(this);
+
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormEsc = this._handleFormEsc.bind(this);
   }
@@ -25,8 +26,8 @@ export default class Point {
     this._itemComponent = new EventItemView(event);
     this._formComponent = new EventFormView(event, false);
 
-    this._itemComponent.setArrowClickHandler(this._handleArrowClickOnItem);
-    this._formComponent.setArrowClickHandler(this._handleArrowClickOnForm);
+    this._itemComponent.setRollUpClickHandler(this._handleItemRollUpClick);
+    this._formComponent.setRollUpClickHandler(this._handleFormRollUpClick);
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevItemComponent === null || prevFormComponent === null) {
@@ -56,19 +57,15 @@ export default class Point {
 
   _replaceFormToItem() {
     replace(this._itemComponent, this._formComponent);
-  }
-
-  _replaceFormToItemOnEsc() {
-    this._replaceFormToItem();
     document.removeEventListener('keydown', this._handleFormEsc);
   }
 
-  _handleArrowClickOnItem() {
+  _handleItemRollUpClick() {
     this._replaceItemToForm();
     document.addEventListener('keydown', this._handleFormEsc);
   }
 
-  _handleArrowClickOnForm() {
+  _handleFormRollUpClick() {
     this._replaceFormToItem();
   }
 
@@ -78,7 +75,7 @@ export default class Point {
   }
 
   _handleFormEsc(evt) {
-    isEscEvent(evt, this._replaceFormToItemOnEsc());
+    isEscEvent(evt, this._replaceFormToItem());
   }
 
   destroy() {
