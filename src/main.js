@@ -2,10 +2,8 @@ import InfoView from '@view/info/info';
 import NavigationView from '@view/navigation';
 import FilterView from '@view/filter/filter';
 import TripPresenter from '@presenter/trip';
-
 import {render} from '@utils/render';
 import {generateEvent} from '@mock/event';
-
 import {EVENT_COUNT, RenderPosition, MocksCount, FilterType} from 'consts';
 
 const headerElement = document.querySelector('.page-header');

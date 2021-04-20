@@ -1,5 +1,4 @@
 import AbstractView from '@view/abstract';
-
 import {createEventFormTemplate} from './event-form.template';
 
 export default class EventForm extends AbstractView {

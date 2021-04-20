@@ -1,17 +1,18 @@
 import EventItemView from '@view/event-item/event-item';
 import EventFormView from '@view/event-form/event-form';
-
 import {render, replace, remove} from '@utils/render';
 import {isEscEvent} from '@utils/event';
-import {RenderPosition} from 'consts';
+import {RenderPosition, EventMode} from 'consts';
 
 export default class Event {
-  constructor(container, changeEventData) {
+  constructor(container, changeEventData, changeMode) {
     this._eventContainer = container;
     this._changeEventData = changeEventData;
+    this._changeMode = changeMode;
 
     this._itemComponent = null;
     this._formComponent = null;
+    this._mode = EventMode.ITEM;
 
     this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
 
@@ -41,11 +42,11 @@ export default class Event {
       return;
     }
 
-    if (this._eventContainer.getElement().contains(prevItemComponent.getElement())) {
+    if (this._mode === EventMode.ITEM) {
       replace(this._itemComponent, prevItemComponent);
     }
 
-    if (this._eventContainer.getElement().contains(prevFormComponent.getElement())) {
+    if (this._mode === EventMode.FORM) {
       replace(this._formComponent, prevFormComponent);
     }
 
@@ -59,11 +60,14 @@ export default class Event {
 
   _replaceItemToForm() {
     replace(this._formComponent, this._itemComponent);
+    this._changeMode();
+    this._mode = EventMode.FORM;
   }
 
   _replaceFormToItem() {
     replace(this._itemComponent, this._formComponent);
     document.removeEventListener('keydown', this._handleFormEsc);
+    this._mode = EventMode.ITEM;
   }
 
   _handleItemFavoriteClick() {
@@ -100,5 +104,11 @@ export default class Event {
   destroy() {
     remove(this._itemComponent);
     remove(this._formComponent);
+  }
+
+  resetView() {
+    if (this._mode !== EventMode.ITEM) {
+      this._replaceFormToItem();
+    }
   }
 }

@@ -68,3 +68,8 @@ export const KeyCode = {
   ESC: 'Escape',
   ENTER: 'Enter',
 };
+
+export const EventMode = {
+  ITEM: 'ITEM',
+  FORM: 'FORM',
+};
