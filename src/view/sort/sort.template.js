@@ -1,4 +1,4 @@
-import {createElements} from 'Utils/render';
+import {createElements} from '@utils/render';
 
 const createSortItemTemplate = (sort) => {
   return `<div class="trip-sort__item  trip-sort__item--${sort}">

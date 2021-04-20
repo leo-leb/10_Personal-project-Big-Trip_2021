@@ -1,4 +1,4 @@
-import AbstractView from 'View/abstract';
+import AbstractView from '@view/abstract';
 import {createEventItemTemplate} from './event-item.template';
 
 export default class EventItem extends AbstractView {
@@ -6,20 +6,31 @@ export default class EventItem extends AbstractView {
     super();
     this._event = event;
 
-    this._arrowClickHandler = this._arrowClickHandler.bind(this);
+    this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEventItemTemplate(this._event);
   }
 
-  _arrowClickHandler(evt) {
+  _rollUpClickHandler(evt) {
     evt.preventDefault();
-    this._callback.arrowClick();
+    this._callback.rollUpClick();
   }
 
-  setArrowClickHandler(callback) {
-    this._callback.arrowClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._arrowClickHandler);
+  setRollUpClickHandler(callback) {
+    this._callback.rollUpClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollUpClickHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
   }
 }

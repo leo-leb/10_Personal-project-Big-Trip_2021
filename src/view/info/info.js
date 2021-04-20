@@ -1,4 +1,4 @@
-import AbstractView from 'View/abstract';
+import AbstractView from '@view/abstract';
 import {createInfoTemplate} from './info.template';
 
 export default class Info extends AbstractView {
