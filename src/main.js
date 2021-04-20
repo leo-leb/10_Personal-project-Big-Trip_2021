@@ -1,17 +1,12 @@
 import InfoView from '@view/info/info';
 import NavigationView from '@view/navigation';
 import FilterView from '@view/filter/filter';
-import SortView from '@view/sort/sort';
-import EventListView from '@view/event-list';
-import EventItemView from '@view/event-item/event-item';
-import EventFormView from '@view/event-form/event-form';
-import NoEventsView from '@view/no-events';
+import TripPresenter from '@presenter/trip';
 
-import {render, replace} from '@utils/render';
-import {isEscEvent} from '@utils/event';
+import {render} from '@utils/render';
 import {generateEvent} from '@mock/event';
 
-import {EVENT_COUNT, RenderPosition, MocksCount, FilterType, SortType} from 'consts';
+import {EVENT_COUNT, RenderPosition, MocksCount, FilterType} from 'consts';
 
 const headerElement = document.querySelector('.page-header');
 const infoElement = headerElement.querySelector('.trip-main');
@@ -23,48 +18,54 @@ const tripEventsElement = mainElement.querySelector('.trip-events');
 const events = new Array(MocksCount.EVENTS).fill().map(generateEvent);
 const trip = events.slice(0, EVENT_COUNT);
 
-const eventList = new EventListView();
-
 render(infoElement, new InfoView(trip), RenderPosition.AFTERBEGIN);
 render(menuElement, new NavigationView(), RenderPosition.BEFOREEND);
 render(filterElement, new FilterView(FilterType), RenderPosition.BEFOREEND);
-render(tripEventsElement, new SortView(SortType), RenderPosition.BEFOREEND);
-render(tripEventsElement, eventList, RenderPosition.BEFOREEND);
 
-const renderEvent = (eventItem, eventList, isAdd) => {
-  const event = new EventItemView(eventItem);
-  const eventForm = new EventFormView(eventItem, isAdd);
+const tripPresenter = new TripPresenter(tripEventsElement);
 
-  const replaceCardToForm = () => replace(eventForm, event);
-  const replaceFormToCard = () => replace(event, eventForm);
+tripPresenter.init(trip);
 
-  const setFormEscHandler = () => {
-    replaceFormToCard();
-    document.removeEventListener('keydown', onFormEsc);
-  };
+// const renderEvent = (eventItem, eventList, isAdd) => {
+//   const event = new EventItemView(eventItem);
+//   const eventForm = new EventFormView(eventItem, isAdd);
 
-  const onFormEsc = (evt) => isEscEvent(evt, setFormEscHandler());
+//   const replaceCardToForm = () => replace(eventForm, event);
+//   const replaceFormToCard = () => replace(event, eventForm);
 
-  event.setArrowClickHandler(() => {
-    replaceCardToForm();
-    document.addEventListener('keydown', onFormEsc);
-  });
+//   const setFormEscHandler = () => {
+//     replaceFormToCard();
+//     document.removeEventListener('keydown', onFormEsc);
+//   };
 
-  eventForm.setArrowClickHandler(() => {
-    replaceFormToCard();
-    document.removeEventListener('keydown', onFormEsc);
-  });
+//   const onFormEsc = (evt) => isEscEvent(evt, setFormEscHandler());
 
-  eventForm.setFormSubmitHandler(() => {
-    replaceFormToCard();
-    document.removeEventListener('keydown', onFormEsc);
-  });
+//   event.setArrowClickHandler(() => {
+//     replaceCardToForm();
+//     document.addEventListener('keydown', onFormEsc);
+//   });
 
-  render(eventList, event, RenderPosition.BEFOREEND);
-};
+//   eventForm.setArrowClickHandler(() => {
+//     replaceFormToCard();
+//     document.removeEventListener('keydown', onFormEsc);
+//   });
 
-if (trip.length) {
-  trip.forEach((event) => renderEvent(event, eventList.getElement(), false));
-} else {
-  render(eventList.getElement(), new NoEventsView(), RenderPosition.BEFOREEND);
-}
+//   eventForm.setFormSubmitHandler(() => {
+//     replaceFormToCard();
+//     document.removeEventListener('keydown', onFormEsc);
+//   });
+
+//   render(eventList, event, RenderPosition.BEFOREEND);
+// };
+
+// const renderTrip = (container, trip) => {
+//   render(tripEventsElement, new SortView(SortType), RenderPosition.BEFOREEND);
+//   render(tripEventsElement, eventList, RenderPosition.BEFOREEND);
+//   if (trip.length) {
+//     trip.forEach((event) => renderEvent(event, eventList.getElement(), false));
+//   } else {
+//     render(eventList.getElement(), new NoEventsView(), RenderPosition.BEFOREEND);
+//   }
+// };
+
+// renderTrip(tripEventsElement, trip);
