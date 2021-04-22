@@ -48,3 +48,7 @@ export const getTimeDuration = (from, to) => {
     return getTimeToString(days) + TimePrefix.DAY + ' ' + getTimeToString(hours) + TimePrefix.HOUR + ' ' + getTimeToString(minutes) + TimePrefix.MINUTE;
   }
 };
+
+export const getTimeInMinutes = (from, to) => {
+  return Math.abs(dayjs(from).diff(dayjs(to), 'minutes'));
+};

@@ -54,6 +54,17 @@ export default class Event {
     remove(prevFormComponent);
   }
 
+  destroy() {
+    remove(this._itemComponent);
+    remove(this._formComponent);
+  }
+
+  resetView() {
+    if (this._mode !== EventMode.ITEM) {
+      this._replaceFormToItem();
+    }
+  }
+
   _renderItem() {
     render(this._eventContainer, this._itemComponent, RenderPosition.BEFOREEND);
   }
@@ -99,16 +110,5 @@ export default class Event {
 
   _handleFormEsc(evt) {
     isEscEvent(evt, this._replaceFormToItem());
-  }
-
-  destroy() {
-    remove(this._itemComponent);
-    remove(this._formComponent);
-  }
-
-  resetView() {
-    if (this._mode !== EventMode.ITEM) {
-      this._replaceFormToItem();
-    }
   }
 }

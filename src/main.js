@@ -6,6 +6,9 @@ import {render} from '@utils/render';
 import {generateEvent} from '@mock/event';
 import {EVENT_COUNT, RenderPosition, MocksCount, FilterType} from 'consts';
 
+import {getEventsByDate} from '@utils/sort';
+import {dataArrayAdapter} from '@utils/adapt';
+
 const headerElement = document.querySelector('.page-header');
 const infoElement = headerElement.querySelector('.trip-main');
 const menuElement = headerElement.querySelector('.trip-controls__navigation');
@@ -14,7 +17,7 @@ const mainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = mainElement.querySelector('.trip-events');
 
 const events = new Array(MocksCount.EVENTS).fill().map(generateEvent);
-const trip = events.slice(0, EVENT_COUNT);
+const trip = getEventsByDate(dataArrayAdapter(events).slice(0, EVENT_COUNT));
 
 render(infoElement, new InfoView(trip), RenderPosition.AFTERBEGIN);
 render(menuElement, new NavigationView(), RenderPosition.BEFOREEND);
