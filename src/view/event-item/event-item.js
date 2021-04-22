@@ -14,23 +14,23 @@ export default class EventItem extends AbstractView {
     return createEventItemTemplate(this._event);
   }
 
-  _rollUpClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.rollUpClick();
-  }
-
   setRollUpClickHandler(callback) {
     this._callback.rollUpClick = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollUpClickHandler);
   }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
-
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  _rollUpClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollUpClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   }
 }

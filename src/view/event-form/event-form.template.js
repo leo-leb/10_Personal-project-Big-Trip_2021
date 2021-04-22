@@ -38,7 +38,7 @@ const createResetButtonTemplate = (type) => {
 };
 
 export const createEventFormTemplate = (event, isAdd) => {
-  const {base_price, date_from, date_to, destination, type, offers} = event;
+  const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -72,10 +72,10 @@ export const createEventFormTemplate = (event, isAdd) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value='${getFullDateSlashAndTime(date_from)}'>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value='${getFullDateSlashAndTime(dateFrom)}'>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value='${getFullDateSlashAndTime(date_to)}'>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value='${getFullDateSlashAndTime(dateTo)}'>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -83,7 +83,7 @@ export const createEventFormTemplate = (event, isAdd) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value=${base_price.toString()}>
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value=${basePrice.toString()}>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

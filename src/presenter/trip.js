@@ -18,7 +18,7 @@ export default class Trip {
     this._noEventsComponent = new NoEventsView();
 
     this._handleEventDataChange = this._handleEventDataChange.bind(this);
-    this._handeEventModeChange = this._handeEventModeChange.bind(this);
+    this._handleEventModeChange = this._handleEventModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -39,7 +39,7 @@ export default class Trip {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleEventDataChange, this._handeEventModeChange);
+    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleEventDataChange, this._handleEventModeChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -71,18 +71,6 @@ export default class Trip {
     this._eventPresenter = {};
   }
 
-  _handleEventDataChange(updatedEvent) {
-    this._trip = updateItem(this._trip, updatedEvent);
-    this._originalTrip = updateItem(this._originalTrip, updatedEvent);
-    this._eventPresenter[updatedEvent.id].init(updatedEvent);
-  }
-
-  _handeEventModeChange() {
-    Object
-      .values(this._eventPresenter)
-      .forEach((presenter) => presenter.resetView());
-  }
-
   _sortEvents(sortType) {
     switch(sortType) {
       case SortType.TIME:
@@ -95,6 +83,18 @@ export default class Trip {
         this._trip = this._originalTrip.slice();
     }
     this._currentSortType = sortType;
+  }
+
+  _handleEventDataChange(updatedEvent) {
+    this._trip = updateItem(this._trip, updatedEvent);
+    this._originalTrip = updateItem(this._originalTrip, updatedEvent);
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
+  }
+
+  _handleEventModeChange() {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _handleSortTypeChange(sortType) {

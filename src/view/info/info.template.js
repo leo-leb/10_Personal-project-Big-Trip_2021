@@ -7,7 +7,7 @@ const getRoute = (trip) => {
 const getPrice = (trip) => {
   const container = [];
   for (const event of trip) {
-    container.push(event.base_price);
+    container.push(event.basePrice);
     event.offers.forEach((elem) => container.push(elem.price));
   }
   return sum(container);

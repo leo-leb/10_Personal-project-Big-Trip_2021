@@ -13,13 +13,13 @@ export default class Sort extends AbstractView {
     return createSortTemplate(this._sorts);
   }
 
-  _sortClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
-  }
-
   setSortClickHandler(callback) {
     this._callback.sortTypeChange = callback;
     this.getElement().addEventListener('click', this._sortClickHandler);
+  }
+
+  _sortClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 }
