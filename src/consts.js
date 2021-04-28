@@ -50,11 +50,26 @@ export const FilterType = {
 };
 
 export const SortType = {
-  DAY: 'Day',
-  EVENT: 'Event',
-  TIME: 'Time',
-  PRICE: 'Price',
-  OFFERS: 'Offers',
+  DAY: {
+    name: 'day',
+    isToggle: true,
+  },
+  EVENT: {
+    name: 'event',
+    isToggle: false,
+  },
+  TIME: {
+    name: 'time',
+    isToggle: true,
+  },
+  PRICE: {
+    name: 'price',
+    isToggle: true,
+  },
+  OFFERS: {
+    name: 'offers',
+    isToggle: false,
+  },
 };
 
 export const ButtonType = {

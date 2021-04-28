@@ -1,16 +1,17 @@
 import AbstractView from '@view/abstract';
 import {createSortTemplate} from './sort.template';
+import {SortType} from 'consts';
 
 export default class Sort extends AbstractView {
-  constructor(sorts) {
+  constructor(type) {
     super();
-    this._sorts = sorts;
+    this._actualSort = type;
 
     this._sortClickHandler = this._sortClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createSortTemplate(this._sorts);
+    return createSortTemplate(this._actualSort);
   }
 
   setSortClickHandler(callback) {
@@ -20,6 +21,9 @@ export default class Sort extends AbstractView {
 
   _sortClickHandler(evt) {
     evt.preventDefault();
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
+    const target = Object.values(SortType).find((element) => {
+      return element.name === evt.target.dataset.sortType && element.isToggle;
+    });
+    this._callback.sortTypeChange(target);
   }
 }
