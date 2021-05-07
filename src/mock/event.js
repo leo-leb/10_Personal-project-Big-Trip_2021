@@ -12,9 +12,6 @@ const PRICE_LIMIT = 5000;
 export const offersMock = getOffers();
 export const destinations = getDestinations();
 
-console.log(offersMock);
-console.log(destinations);
-
 export const generateEvent  = () => {
   const getType = getRandomValue(Object.values(EventType)).toLowerCase();
   const typeOffers = offersMock.find((element) => {
