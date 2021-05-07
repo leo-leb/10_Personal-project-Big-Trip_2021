@@ -9,11 +9,19 @@ const {YEAR, MONTHES, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS} = TimeMeter;
 
 const PRICE_LIMIT = 5000;
 
-const offersMock = getOffers();
-const destinations = getDestinations();
+export const offersMock = getOffers();
+export const destinations = getDestinations();
+
+console.log(offersMock);
+console.log(destinations);
 
 export const generateEvent  = () => {
   const getType = getRandomValue(Object.values(EventType)).toLowerCase();
+  const typeOffers = offersMock.find((element) => {
+    return element.type === getType;
+  }).offers;
+  const offers = [];
+  offers.push(getRandomValue(typeOffers));
 
   return {
     base_price: getRandomNumber(PRICE_LIMIT),
@@ -23,8 +31,6 @@ export const generateEvent  = () => {
     id: nanoid(),
     is_favorite: Boolean(getRandomInteger(0, 1)),
     type: getType,
-    offers: offersMock.find((element) => {
-      return element.type === getType;
-    }).offers,
+    offers: offers,
   };
 };

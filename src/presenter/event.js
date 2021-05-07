@@ -24,7 +24,7 @@ export default class Event {
   }
 
   init(event) {
-    this._event = event;
+    this._event = Object.assign({}, event);
 
     const prevItemComponent = this._itemComponent;
     const prevFormComponent = this._formComponent;
@@ -87,7 +87,7 @@ export default class Event {
         {},
         this._event,
         {
-          is_favorite: !this._event.is_favorite,
+          isFavorite: !this._event.isFavorite,
         },
       ),
     );
@@ -99,6 +99,7 @@ export default class Event {
   }
 
   _handleFormRollUpClick() {
+    this._formComponent.reset();
     this._replaceFormToItem();
   }
 
@@ -109,6 +110,9 @@ export default class Event {
   }
 
   _handleFormEsc(evt) {
-    isEscEvent(evt, this._replaceFormToItem());
+    isEscEvent(evt, () => {
+      this._formComponent.reset();
+      this._replaceFormToItem();
+    });
   }
 }

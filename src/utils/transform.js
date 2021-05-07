@@ -52,3 +52,7 @@ export const getTimeDuration = (from, to) => {
 export const getTimeInMinutes = (from, to) => {
   return Math.abs(dayjs(from).diff(dayjs(to), 'minutes'));
 };
+
+export const stringToClass = (title) => {
+  return title.toLowerCase().split(' ').join('-');
+};

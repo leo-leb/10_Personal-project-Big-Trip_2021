@@ -80,8 +80,8 @@ export const ButtonType = {
 };
 
 export const KeyCode = {
-  ESC: 'Escape',
-  ENTER: 'Enter',
+  ESC: 27,
+  ENTER: 13,
 };
 
 export const EventMode = {
