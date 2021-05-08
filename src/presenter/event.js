@@ -5,22 +5,23 @@ import {isEscEvent} from '@utils/event';
 import {RenderPosition, EventMode} from 'consts';
 
 export default class Event {
-  constructor(container, changeEventData, changeMode) {
+  constructor(container, changeEventData, changeMode, deleteEvent) {
     this._eventContainer = container;
     this._changeEventData = changeEventData;
     this._changeMode = changeMode;
+    this._deleteEvent = deleteEvent;
 
     this._itemComponent = null;
     this._formComponent = null;
+
     this._mode = EventMode.ITEM;
 
     this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
-
     this._handleItemRollUpClick = this._handleItemRollUpClick.bind(this);
     this._handleFormRollUpClick = this._handleFormRollUpClick.bind(this);
-
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormEsc = this._handleFormEsc.bind(this);
+    this._handleFormDelete = this._handleFormDelete.bind(this);
   }
 
   init(event) {
@@ -36,6 +37,7 @@ export default class Event {
     this._itemComponent.setRollUpClickHandler(this._handleItemRollUpClick);
     this._formComponent.setRollUpClickHandler(this._handleFormRollUpClick);
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._formComponent.setFormDeletetHandler(this._handleFormDelete);
 
     if (prevItemComponent === null || prevFormComponent === null) {
       this._renderItem();
@@ -114,5 +116,9 @@ export default class Event {
       this._formComponent.reset();
       this._replaceFormToItem();
     });
+  }
+
+  _handleFormDelete(event) {
+    this._deleteEvent(event);
   }
 }

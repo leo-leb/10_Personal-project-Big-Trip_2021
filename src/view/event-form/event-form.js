@@ -24,6 +24,7 @@ export default class EventForm extends SmartView {
     this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._offerClickHandler = this._offerClickHandler.bind(this);
+    this._formDeleteHandler = this._formDeleteHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDateFromPicker();
@@ -47,6 +48,7 @@ export default class EventForm extends SmartView {
     this._setDateToPicker();
     this.setRollUpClickHandler(this._callback.rollUpClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFormDeletetHandler(this._callback.formDelete);
   }
 
   setRollUpClickHandler(callback) {
@@ -57,6 +59,11 @@ export default class EventForm extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setFormDeletetHandler(callback) {
+    this._callback.formDelete = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteHandler);
   }
 
   _setDateFromPicker() {
@@ -117,6 +124,11 @@ export default class EventForm extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(this._data);
+  }
+
+  _formDeleteHandler(evt) {
+    evt.preventDefault();
+    this._callback.formDelete(this._data);
   }
 
   _typeClickHandler(evt) {

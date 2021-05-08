@@ -22,6 +22,7 @@ export default class Trip {
     this._handleEventDataChange = this._handleEventDataChange.bind(this);
     this._handleEventModeChange = this._handleEventModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleEventDelete = this._handleEventDelete.bind(this);
   }
 
   init(trip) {
@@ -42,9 +43,20 @@ export default class Trip {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleEventDataChange, this._handleEventModeChange);
+    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleEventDataChange, this._handleEventModeChange, this._handleEventDelete);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
+  }
+
+  _deleteEvent(event) {
+    const id = event.id;
+    const index = this._trip.findIndex((item) => {
+      return item === event;
+    });
+
+    this._eventPresenter[id].destroy();
+    delete this._eventPresenter[id];
+    this._trip.splice(index, 1);
   }
 
   _renderEventList() {
@@ -118,5 +130,9 @@ export default class Trip {
 
     this._clearEventList();
     this._renderTrip(newSort);
+  }
+
+  _handleEventDelete(event) {
+    this._deleteEvent(event);
   }
 }
