@@ -22,8 +22,10 @@ export default class Sort extends AbstractView {
   _sortClickHandler(evt) {
     evt.preventDefault();
     const target = Object.values(SortType).find((element) => {
-      return element.name === evt.target.dataset.sortType && element.isToggle;
+      return element.name === evt.target.dataset.sortType;
     });
-    this._callback.sortTypeChange(target);
+    if (target) {
+      this._callback.sortTypeChange(target);
+    }
   }
 }

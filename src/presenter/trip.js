@@ -5,7 +5,7 @@ import EventPresenter from '@presenter/event';
 import {render} from '@utils/render';
 import {updateItem} from '@utils/common';
 import {RenderPosition, SortType} from 'consts';
-import {getEventsByTime, getEventsByPrice} from '@utils/sort';
+import {getEventsByTime, getEventsByPrice, getEventsByDate} from '@utils/sort';
 import {remove} from '@utils/render';
 
 export default class Trip {
@@ -13,7 +13,8 @@ export default class Trip {
     this._tripContainer = tripContainer;
     this._eventPresenter = {};
 
-    this._currentSort = SortType.DAY;
+    this._defaultSort = SortType.DAY;
+    this._currentSort = null;
 
     this._eventListContainerComponent = new EventListContainerView();
     this._noEventsComponent = new NoEventsView();
@@ -24,14 +25,14 @@ export default class Trip {
   }
 
   init(trip) {
-    this._trip = trip.slice();
-    this._originalTrip = this._trip.slice();
+    this._trip = trip;
 
-    this._renderTrip(this._currentSort);
+    this._renderTrip(this._defaultSort);
   }
 
   _renderSort(activeSort) {
     this._sortComponent = new SortView(activeSort);
+
     render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
     this._sortComponent.setSortClickHandler(this._handleSortTypeChange);
   }
@@ -55,6 +56,7 @@ export default class Trip {
   }
 
   _renderTrip(actualSort) {
+    this._sortEvents(actualSort);
     this._renderSort(actualSort);
     this._renderEventListContainer();
 
@@ -81,15 +83,18 @@ export default class Trip {
       case SortType.PRICE:
         this._trip = getEventsByPrice(this._trip);
         break;
+      case SortType.DAY:
+        this._trip = getEventsByDate(this._trip);
+        break;
       default:
-        this._trip = this._originalTrip.slice();
+        this._trip = getEventsByDate(this._trip);
     }
+
     this._currentSort = sortType;
   }
 
   _handleEventDataChange(updatedEvent) {
     this._trip = updateItem(this._trip, updatedEvent);
-    this._originalTrip = updateItem(this._originalTrip, updatedEvent);
     this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
@@ -110,9 +115,8 @@ export default class Trip {
 
     remove(this._sortComponent);
     remove(this._eventListContainerComponent);
-    this._clearEventList();
 
-    this._sortEvents(newSort);
+    this._clearEventList();
     this._renderTrip(newSort);
   }
 }
