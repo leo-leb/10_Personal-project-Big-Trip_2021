@@ -1,6 +1,8 @@
 import SmartView from '@view/smart';
 import {createEventFormTemplate} from './event-form.template';
 import {offersMock, destinations} from '@mock/event';
+import flatpickr from 'flatpickr';
+import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 export default class EventForm extends SmartView {
   constructor(event, isAdd) {
@@ -11,25 +13,38 @@ export default class EventForm extends SmartView {
     this._originalOffers = this._data.offers.slice();
 
     this._isAdd = isAdd;
+    this._dateFromPicker = null;
+    this._dateToPicker = null;
 
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._typeClickHandler = this._typeClickHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
-    this._dateFromInputHandler = this._dateFromInputHandler.bind(this);
-    this._dateToInputHandler = this._dateToInputHandler.bind(this);
+    this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
+    this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._offerClickHandler = this._offerClickHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDateFromPicker();
+    this._setDateToPicker();
   }
 
   getTemplate() {
     return createEventFormTemplate(this._data, this._isAdd);
   }
 
+  reset() {
+    this.updateData(this._originalData);
+    this.updateData({
+      offers: this._originalOffers,
+    });
+  }
+
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDateFromPicker();
+    this._setDateToPicker();
     this.setRollUpClickHandler(this._callback.rollUpClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
@@ -42,6 +57,56 @@ export default class EventForm extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  _setDateFromPicker() {
+    if(this._dateFromPicker) {
+      this._dateFromPicker.destroy();
+      this._dateFromPicker = null;
+    }
+
+    if(this._data.dateFrom) {
+      this._dateFromPicker = flatpickr(
+        this.getElement().querySelector('#event-start-time-1'),
+        {
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
+          defaultDate: this._data.dateFrom,
+          onChange: this._dateFromChangeHandler,
+        },
+      );
+    }
+  }
+
+  _setDateToPicker() {
+    if(this._dateToPicker) {
+      this._dateToPicker.destroy();
+      this._dateToPicker = null;
+    }
+
+    if(this._data.dateTo) {
+      this._dateToPicker = flatpickr(
+        this.getElement().querySelector('#event-end-time-1'),
+        {
+          enableTime: true,
+          dateFormat: 'd/m/y H:i',
+          defaultDate: this._data.dateTo,
+          onChange: this._dateToChangeHandler,
+        },
+      );
+    }
+  }
+
+  _dateFromChangeHandler([userDate]) {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  _dateToChangeHandler([userDate]) {
+    this.updateData({
+      dateTo: userDate,
+    });
   }
 
   _rollUpClickHandler(evt) {
@@ -66,20 +131,6 @@ export default class EventForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       basePrice: evt.target.value,
-    }, true);
-  }
-
-  _dateFromInputHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      dateFrom: evt.target.value,
-    }, true);
-  }
-
-  _dateToInputHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      dateTo: evt.target.value,
     }, true);
   }
 
@@ -129,16 +180,7 @@ export default class EventForm extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelector('.event__type-list').addEventListener('click', this._typeClickHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceInputHandler);
-    this.getElement().querySelector('#event-start-time-1').addEventListener('input', this._dateFromInputHandler);
-    this.getElement().querySelector('#event-end-time-1').addEventListener('input', this._dateToInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputHandler);
     this.getElement().querySelectorAll('.event__offer-selector').forEach((elem) => elem.addEventListener('click', this._offerClickHandler));
-  }
-
-  reset() {
-    this.updateData(this._originalData);
-    this.updateData({
-      offers: this._originalOffers,
-    });
   }
 }
