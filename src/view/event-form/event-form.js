@@ -3,14 +3,14 @@ import {createEventFormTemplate} from './event-form.template';
 import {offersMock, destinations} from '@mock/event';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
+import {cloneDeep} from 'lodash';
 
 export default class EventForm extends SmartView {
   constructor(event, isAdd) {
     super();
 
     this._data = Object.assign({}, event);
-    this._originalData = Object.assign({}, this._data);
-    this._originalOffers = this._data.offers.slice();
+    this._originalData = cloneDeep(event);
 
     this._isAdd = isAdd;
     this._dateFromPicker = null;
@@ -37,9 +37,6 @@ export default class EventForm extends SmartView {
 
   reset() {
     this.updateData(this._originalData);
-    this.updateData({
-      offers: this._originalOffers,
-    });
   }
 
   restoreHandlers() {
@@ -158,29 +155,23 @@ export default class EventForm extends SmartView {
 
   _offerClickHandler(evt) {
     evt.preventDefault();
-
-    const data = Object.assign({}, this._data);
-    const offers = data.offers;
     const target = evt.currentTarget.querySelector('.event__offer-title');
 
-    const even = (elem) => elem.title === target.textContent;
+    const offers = this._data.offers.concat();
+    const offersForDataType = offersMock.find((elem) => elem.type === this._data.type).offers;
 
-    const offersLib = offersMock.find((elem) => {
-      return elem.type === data.type;
-    });
+    const isSameTitle = (item) => item.title === target.textContent;
 
+    const index = offers.findIndex(isSameTitle);
+    const newElement = offersForDataType.find(isSameTitle);
 
-    if (offers.some(even)) {
-      const index = offers.findIndex((elem) => {
-        return elem.title === target.textContent;
-      });
-
-      (index === 0 ? offers.shift() : offers.splice(index, 1));
+    if (offers.some(isSameTitle)) {
+      if (index === 0) {
+        offers.shift();
+      } else {
+        offers.splice(index, 1);
+      }
     } else {
-      const newElement = offersLib.offers.find((elem) => {
-        return elem.title === target.textContent;
-      });
-
       offers.push(newElement);
     }
 
