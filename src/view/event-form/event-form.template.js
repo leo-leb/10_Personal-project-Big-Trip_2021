@@ -1,14 +1,15 @@
 import {createButtonRollUp} from '@view/common-templates/btn-roll-up.template';
-import {getFullDateSlashAndTime} from '@utils/transform';
+import {getFullDateSlashAndTime, stringToClass} from '@utils/transform';
 import {createElements} from '@utils/render';
 import {EventType, ButtonType} from 'consts';
+import {offersMock, destinations} from '@mock/event';
 
-const createOfferTemplate = (offer) => {
-  const {title, price} = offer;
+const createOfferTemplate = (item, offers) => {
+  const {title, price} = item;
 
   return `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}">
-    <label class="event__offer-label" for="event-offer-${title}-1">
+    <input class="event__offer-checkbox  visually-hidden" id="${stringToClass(title)}" type="checkbox" name="event-offer-${stringToClass(title)}" ${offers.includes(item) ? 'checked' : ''}>
+    <label class="event__offer-label" for="${stringToClass(title)}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
@@ -21,7 +22,7 @@ const createTypeTemplate = (type) => {
 
   return `<div class="event__type-item">
     <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${lowerType}>
-    <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${type}</label>
+    <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1" data-type=${lowerType}>${type}</label>
   </div>`;
 };
 
@@ -33,12 +34,22 @@ const createPhotosTemplate = (destination) => {
   </div>`;
 };
 
+const createDestinationList = (destinations) => {
+  return `<datalist id="destination-list-1">
+    ${createElements(destinations.map((point) => point.name), (name) => {return `<option value=${name}>`;})}
+  </datalist>`;
+};
+
 const createResetButtonTemplate = (type) => {
   return `<button class="event__reset-btn" type="reset">${type}</button>`;
 };
 
 export const createEventFormTemplate = (event, isAdd) => {
   const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
+
+  const offersLib = offersMock.find((elem) => {
+    return elem.type === type;
+  });
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -63,11 +74,7 @@ export const createEventFormTemplate = (event, isAdd) => {
             ${type}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.name} list="destination-list-1">
-          <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
-          </datalist>
+          ${createDestinationList(destinations)}
         </div>
 
         <div class="event__field-group  event__field-group--time">
@@ -93,7 +100,9 @@ export const createEventFormTemplate = (event, isAdd) => {
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">${createElements(offers, createOfferTemplate)}</div>
+          <div class="event__available-offers">
+            ${offersLib.offers.map((item) => createOfferTemplate(item, offers)).join('')}
+          </div>
         </section>
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
