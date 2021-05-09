@@ -7,8 +7,10 @@ import {offersMock, destinations} from '@mock/event';
 const createOfferTemplate = (item, offers) => {
   const {title, price} = item;
 
+  const isChecked = offers.find((offer) => offer.title === item.title);
+
   return `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="${stringToClass(title)}" type="checkbox" name="event-offer-${stringToClass(title)}" ${offers.includes(item) ? 'checked' : ''}>
+    <input class="event__offer-checkbox  visually-hidden" id="${stringToClass(title)}" type="checkbox" name="event-offer-${stringToClass(title)}" ${isChecked ? 'checked' : ''}>
     <label class="event__offer-label" for="${stringToClass(title)}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
@@ -47,9 +49,7 @@ const createResetButtonTemplate = (type) => {
 export const createEventFormTemplate = (event, isAdd) => {
   const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
 
-  const offersLib = offersMock.find((elem) => {
-    return elem.type === type;
-  });
+  const offersForEventType = offersMock.find((elem) => elem.type === type).offers;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -101,7 +101,7 @@ export const createEventFormTemplate = (event, isAdd) => {
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
-            ${offersLib.offers.map((item) => createOfferTemplate(item, offers)).join('')}
+            ${offersForEventType.map((item) => createOfferTemplate(item, offers)).join('')}
           </div>
         </section>
         <section class="event__section  event__section--destination">
