@@ -4,15 +4,17 @@ import {offersMock, destinations} from '@mock/event';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import {cloneDeep} from 'lodash';
+import dayjs from 'dayjs';
+import {getDefaultDate} from '@utils/transform';
 
 export default class EventForm extends SmartView {
-  constructor(event, isAdd) {
+  constructor(isAdd, event) {
     super();
 
-    this._data = Object.assign({}, event);
+    this._data = event;
     this._originalData = cloneDeep(event);
-
     this._isAdd = isAdd;
+
     this._dateFromPicker = null;
     this._dateToPicker = null;
 
@@ -32,7 +34,7 @@ export default class EventForm extends SmartView {
   }
 
   getTemplate() {
-    return createEventFormTemplate(this._data, this._isAdd);
+    return createEventFormTemplate(this._isAdd, this._data);
   }
 
   reset() {
@@ -43,9 +45,9 @@ export default class EventForm extends SmartView {
     this._setInnerHandlers();
     this._setDateFromPicker();
     this._setDateToPicker();
-    this.setRollUpClickHandler(this._callback.rollUpClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setFormDeletetHandler(this._callback.formDelete);
+    this.setFormDeleteHandler(this._callback.formDelete);
+    (this._isAdd === false ? this.setRollUpClickHandler(this._callback.rollUpClick) : '');
   }
 
   setRollUpClickHandler(callback) {
@@ -58,7 +60,7 @@ export default class EventForm extends SmartView {
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
-  setFormDeletetHandler(callback) {
+  setFormDeleteHandler(callback) {
     this._callback.formDelete = callback;
     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteHandler);
   }
@@ -70,12 +72,14 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateFrom) {
+      const date = this._isAdd === true ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH/MM');
+
       this._dateFromPicker = flatpickr(
         this.getElement().querySelector('#event-start-time-1'),
         {
           enableTime: true,
           dateFormat: 'd/m/y H:i',
-          defaultDate: this._data.dateFrom,
+          defaultDate: date,
           onChange: this._dateFromChangeHandler,
         },
       );
@@ -89,12 +93,14 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateTo) {
+      const date = this._isAdd === true ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH/MM');
+
       this._dateToPicker = flatpickr(
         this.getElement().querySelector('#event-end-time-1'),
         {
           enableTime: true,
           dateFormat: 'd/m/y H:i',
-          defaultDate: this._data.dateTo,
+          defaultDate: date,
           onChange: this._dateToChangeHandler,
         },
       );
@@ -103,13 +109,13 @@ export default class EventForm extends SmartView {
 
   _dateFromChangeHandler([userDate]) {
     this.updateData({
-      dateFrom: userDate,
+      dateFrom: getDefaultDate(userDate),
     });
   }
 
   _dateToChangeHandler([userDate]) {
     this.updateData({
-      dateTo: userDate,
+      dateTo: getDefaultDate(userDate),
     });
   }
 
@@ -145,9 +151,7 @@ export default class EventForm extends SmartView {
 
   _destinationInputHandler(evt) {
     evt.preventDefault();
-    const newDestination = destinations.find((element) => {
-      return element.name === evt.target.value;
-    });
+    const newDestination = destinations.find((destination) => destination.name === evt.target.value);
     this.updateData({
       destination: newDestination,
     });
@@ -158,7 +162,7 @@ export default class EventForm extends SmartView {
     const target = evt.currentTarget.querySelector('.event__offer-title');
 
     const offers = this._data.offers.concat();
-    const offersForDataType = offersMock.find((elem) => elem.type === this._data.type).offers;
+    const offersForDataType = offersMock.find((offer) => offer.type === this._data.type).offers;
 
     const isSameTitle = (item) => item.title === target.textContent;
 

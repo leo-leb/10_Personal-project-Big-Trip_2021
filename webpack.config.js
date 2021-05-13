@@ -24,6 +24,7 @@ module.exports = {
       '@source': path.resolve(__dirname, 'src'),
       '@mock': path.resolve(__dirname, 'src/mock'),
       '@utils': path.resolve(__dirname, 'src/utils'),
+      '@model': path.resolve(__dirname, 'src/model'),
       '@view': path.resolve(__dirname, 'src/view'),
       '@presenter': path.resolve(__dirname, 'src/presenter'),
       consts$: path.resolve(__dirname, 'src/consts.js'),

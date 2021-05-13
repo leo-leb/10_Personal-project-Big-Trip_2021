@@ -2,40 +2,70 @@ import SortView from '@view/sort/sort';
 import EventListContainerView from '@view/event-list-container';
 import NoEventsView from '@view/no-events';
 import EventPresenter from '@presenter/event';
-import {render} from '@utils/render';
-import {updateItem} from '@utils/common';
-import {RenderPosition, SortType} from 'consts';
+import EventNewPresenter from '@presenter/new-event';
+import {render, remove} from '@utils/render';
 import {getEventsByTime, getEventsByPrice, getEventsByDate} from '@utils/sort';
-import {remove} from '@utils/render';
+import {filter} from '@utils/filter';
+import {RenderPosition, SortType, UpdateType, UserAction, FilterType} from 'consts';
 
 export default class Trip {
-  constructor(tripContainer) {
+  constructor(tripContainer, eventsModel, filterModel) {
     this._tripContainer = tripContainer;
-    this._eventPresenter = {};
+    this._eventsModel = eventsModel;
+    this._filterModel = filterModel;
 
-    this._defaultSort = SortType.DAY;
-    this._currentSort = null;
+    this._eventPresenter = {};
+    this._sortComponent = null;
+
+    this._currentSort = SortType.DAY;
 
     this._eventListContainerComponent = new EventListContainerView();
     this._noEventsComponent = new NoEventsView();
 
-    this._handleEventDataChange = this._handleEventDataChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
     this._handleEventModeChange = this._handleEventModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleEventDelete = this._handleEventDelete.bind(this);
+
+    this._eventsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
+    this._eventNewPresenter = new EventNewPresenter(this._eventListContainerComponent, this._handleViewAction);
   }
 
-  init(trip) {
-    this._trip = trip;
-
-    this._renderTrip(this._defaultSort);
+  init() {
+    this._renderTrip();
   }
 
-  _renderSort(activeSort) {
-    this._sortComponent = new SortView(activeSort);
+  createEvent() {
+    this._currentSort = SortType.DAY;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._eventNewPresenter.init();
+  }
 
-    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+  _getEvents() {
+    const filterType = this._filterModel.getFilter();
+    const events = this._eventsModel.getEvents();
+    const filtredEvents = filter[filterType](events);
+
+    switch(this._currentSort) {
+      case SortType.TIME:
+        return getEventsByTime(filtredEvents);
+      case SortType.PRICE:
+        return getEventsByPrice(filtredEvents);
+      case SortType.DAY:
+        return getEventsByDate(filtredEvents);
+      default:
+        return getEventsByDate(filtredEvents);
+    }
+  }
+
+  _renderSort() {
+    this._sortComponent = new SortView(this._currentSort);
     this._sortComponent.setSortClickHandler(this._handleSortTypeChange);
+    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+
   }
 
   _renderEventListContainer() {
@@ -43,74 +73,84 @@ export default class Trip {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleEventDataChange, this._handleEventModeChange, this._handleEventDelete);
+    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleViewAction, this._handleEventModeChange, this._handleEventDelete);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
 
-  _deleteEvent(event) {
-    const id = event.id;
-    const index = this._trip.findIndex((item) => {
-      return item === event;
-    });
-
-    this._eventPresenter[id].destroy();
-    delete this._eventPresenter[id];
-    this._trip.splice(index, 1);
-  }
-
-  _renderEventList() {
-    this._trip.forEach((event) => this._renderEvent(event));
+  _renderEvents() {
+    this._getEvents().forEach((event) => this._renderEvent(event));
   }
 
   _renderNoEvents() {
     render(this._eventListContainerComponent, this._noEventsComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderTrip(actualSort) {
-    this._sortEvents(actualSort);
-    this._renderSort(actualSort);
+  _renderTrip() {
+    this._renderSort();
     this._renderEventListContainer();
 
-    if (this._trip.length) {
-      this._renderEventList();
+    if (this._getEvents().length) {
+      this._renderEvents();
       return;
     }
 
     this._renderNoEvents();
   }
 
-  _clearEventList() {
+  _clearTrip(resetSortType = false) {
+    this._eventNewPresenter.destroy();
+
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
+
     this._eventPresenter = {};
-  }
 
-  _sortEvents(sortType) {
-    switch(sortType) {
-      case SortType.TIME:
-        this._trip = getEventsByTime(this._trip);
-        break;
-      case SortType.PRICE:
-        this._trip = getEventsByPrice(this._trip);
-        break;
-      case SortType.DAY:
-        this._trip = getEventsByDate(this._trip);
-        break;
-      default:
-        this._trip = getEventsByDate(this._trip);
+    remove(this._sortComponent);
+    remove(this._eventListContainerComponent);
+
+    if (resetSortType) {
+      this._currentSort = SortType.DAY;
     }
-
-    this._currentSort = sortType;
   }
 
-  _handleEventDataChange(updatedEvent) {
-    this._trip = updateItem(this._trip, updatedEvent);
-    this._eventPresenter[updatedEvent.id].init(updatedEvent);
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this._eventsModel.updateEvent(updateType, update);
+        break;
+      case UserAction.ADD_EVENT:
+        this._eventsModel.addEvent(updateType, update);
+        break;
+      case UserAction.DELETE_EVENT:
+        this._eventsModel.deleteEvent(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this._eventPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        this._clearTrip();
+        this._renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        // this._clearTrip({resetSortType: true});
+        this._clearTrip(true);
+        this._renderTrip();
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   }
 
   _handleEventModeChange() {
+    this._eventNewPresenter.destroy();
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -125,14 +165,9 @@ export default class Trip {
       return;
     }
 
-    remove(this._sortComponent);
-    remove(this._eventListContainerComponent);
+    this._currentSort = newSort;
 
-    this._clearEventList();
-    this._renderTrip(newSort);
-  }
-
-  _handleEventDelete(event) {
-    this._deleteEvent(event);
+    this._clearTrip();
+    this._renderTrip();
   }
 }
