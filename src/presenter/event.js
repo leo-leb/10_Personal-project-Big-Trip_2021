@@ -2,14 +2,13 @@ import EventItemView from '@view/event-item/event-item';
 import EventFormView from '@view/event-form/event-form';
 import {render, replace, remove} from '@utils/render';
 import {isEscEvent} from '@utils/event';
-import {RenderPosition, EventMode} from 'consts';
+import {RenderPosition, EventMode, UserAction, UpdateType} from 'consts';
 
 export default class Event {
-  constructor(container, changeEventData, changeMode, deleteEvent) {
+  constructor(container, changeEventData, changeMode) {
     this._eventContainer = container;
     this._changeEventData = changeEventData;
     this._changeMode = changeMode;
-    this._deleteEvent = deleteEvent;
 
     this._itemComponent = null;
     this._formComponent = null;
@@ -21,23 +20,25 @@ export default class Event {
     this._handleFormRollUpClick = this._handleFormRollUpClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormEsc = this._handleFormEsc.bind(this);
+
     this._handleFormDelete = this._handleFormDelete.bind(this);
   }
 
   init(event) {
-    this._event = Object.assign({}, event);
+    this._event = event;
 
     const prevItemComponent = this._itemComponent;
     const prevFormComponent = this._formComponent;
 
     this._itemComponent = new EventItemView(event);
-    this._formComponent = new EventFormView(event, false);
+    this._formComponent = new EventFormView(false, event);
 
     this._itemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._itemComponent.setRollUpClickHandler(this._handleItemRollUpClick);
     this._formComponent.setRollUpClickHandler(this._handleFormRollUpClick);
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._formComponent.setFormDeletetHandler(this._handleFormDelete);
+
+    this._formComponent.setFormDeleteHandler(this._handleFormDelete);
 
     if (prevItemComponent === null || prevFormComponent === null) {
       this._renderItem();
@@ -85,6 +86,8 @@ export default class Event {
 
   _handleItemFavoriteClick() {
     this._changeEventData(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._event,
@@ -106,7 +109,11 @@ export default class Event {
   }
 
   _handleFormSubmit(event) {
-    this._changeEventData(event);
+    this._changeEventData(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      event,
+    );
     this._replaceFormToItem();
     document.removeEventListener('keydown', this._handleFormEsc);
   }
@@ -119,6 +126,10 @@ export default class Event {
   }
 
   _handleFormDelete(event) {
-    this._deleteEvent(event);
+    this._changeEventData(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event,
+    );
   }
 }

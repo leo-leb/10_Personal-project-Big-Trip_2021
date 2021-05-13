@@ -12,6 +12,10 @@ const getTimeToString = (time) => {
   }
 };
 
+export const getDefaultDate = (date) => {
+  return dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+};
+
 export const getFullDate = (date) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
