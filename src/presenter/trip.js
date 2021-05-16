@@ -9,8 +9,8 @@ import {filter} from '@utils/filter';
 import {RenderPosition, SortType, UpdateType, UserAction, FilterType} from 'consts';
 
 export default class Trip {
-  constructor(tripContainer, eventsModel, filterModel) {
-    this._tripContainer = tripContainer;
+  constructor(parrent, eventsModel, filterModel) {
+    this._parrent = parrent;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
 
@@ -64,12 +64,12 @@ export default class Trip {
   _renderSort() {
     this._sortComponent = new SortView(this._currentSort);
     this._sortComponent.setSortClickHandler(this._handleSortTypeChange);
-    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._parrent, this._sortComponent, RenderPosition.BEFOREEND);
 
   }
 
   _renderEventListContainer() {
-    render(this._tripContainer, this._eventListContainerComponent, RenderPosition.BEFOREEND);
+    render(this._parrent, this._eventListContainerComponent, RenderPosition.BEFOREEND);
   }
 
   _renderEvent(event) {

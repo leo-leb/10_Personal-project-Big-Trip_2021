@@ -3,7 +3,7 @@ import NavigationView from '@view/navigation';
 import TripPresenter from '@presenter/trip';
 import FilterPresenter from '@presenter/filter';
 import EventsModel from '@model/events';
-import FilterModel from '@model/filter';
+import FiltersModel from '@model/filter';
 import {render} from '@utils/render';
 import {generateEvent} from '@mock/event';
 import {EVENT_COUNT, RenderPosition, MocksCount} from 'consts';
@@ -19,7 +19,7 @@ const tripEventsElement = mainElement.querySelector('.trip-events');
 const events = new Array(MocksCount.EVENTS).fill().map(generateEvent).slice(0, EVENT_COUNT);
 
 const eventsModel = new EventsModel();
-const filterModel = new FilterModel();
+const filterModel = new FiltersModel();
 
 eventsModel.setEvents(dataArrayAdapter(events));
 
