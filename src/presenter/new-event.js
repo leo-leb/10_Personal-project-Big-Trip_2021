@@ -32,7 +32,9 @@ export default class EventNew {
     this._handleFormEsc = this._handleFormEsc.bind(this);
   }
 
-  init() {
+  init(callback) {
+    this._destroyCallback = callback;
+
     if (this._formComponent !== null) {
       return;
     }
@@ -48,6 +50,10 @@ export default class EventNew {
   destroy() {
     if (this._formComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._formComponent);

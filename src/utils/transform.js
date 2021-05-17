@@ -36,9 +36,11 @@ export const getTime = (date) => {
   return dayjs(date).format('HH:mm');
 };
 
-export const getTimeDuration = (from, to) => {
-  const duration = Math.abs(dayjs(from).diff(dayjs(to), 'minutes'));
+export const getDuration = (from, to) => {
+  return Math.abs(dayjs(from).diff(dayjs(to), 'minutes'));
+};
 
+export const transformDurationToString = (duration) => {
   if (duration < TimeMeter.HOUR) {
     return getTimeToString(duration) + TimePrefix.MINUTE;
   } else if (duration < TimeMeter.DAY) {

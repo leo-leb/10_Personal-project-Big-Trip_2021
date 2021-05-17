@@ -1,5 +1,5 @@
 import {createButtonRollUp} from '@view/common-templates/btn-roll-up.template';
-import {getFullDate, getShortDate, getFullDateAndTime, getTime, getTimeDuration} from '@utils/transform';
+import {getFullDate, getShortDate, getFullDateAndTime, getTime, getDuration, transformDurationToString} from '@utils/transform';
 import {createElements} from '@utils/render';
 import {ButtonType} from 'consts';
 
@@ -16,6 +16,8 @@ const createOfferTemplate = (offer) => {
 export const createEventItemTemplate = (event) => {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, type, offers} = event;
 
+  const eventDuration = getDuration(dateFrom, dateTo);
+
   return `<li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime=${getFullDate(dateFrom)}>${getShortDate(dateFrom)}</time>
@@ -29,7 +31,7 @@ export const createEventItemTemplate = (event) => {
         &mdash;
         <time class="event__end-time" datetime=${getFullDateAndTime(dateTo)}>${getTime(dateTo)}</time>
       </p>
-      <p class="event__duration">${getTimeDuration(dateFrom, dateTo)}</p>
+      <p class="event__duration">${transformDurationToString(eventDuration)}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
