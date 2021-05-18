@@ -1,7 +1,23 @@
 import {sum} from 'mathjs';
+import {getShortDate} from '@utils/transform';
+
+const POINTS_LIMIT = 3;
 
 const getRoute = (trip) => {
-  return Array.from(new Set(trip.map((event) => event.destination.name))).join(' &mdash; ');
+  const routeList = Array.from(new Set(trip.map((event) => event.destination.name)));
+
+  if (routeList.length <= POINTS_LIMIT) {
+    return routeList.join(' &mdash; ');
+  } else {
+    return routeList.slice(1, 2).concat(routeList.slice(-1)).join(' &mdash; ... &mdash; ');
+  }
+};
+
+const getDates = (trip) => {
+  const container = [];
+  container.push(getShortDate(trip.shift().dateFrom));
+  container.push(getShortDate(trip.pop().dateTo));
+  return container.join(' &mdash; ');
 };
 
 const getPrice = (trip) => {
@@ -17,7 +33,7 @@ export const createInfoTemplate = (trip) => {
   return `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${getRoute(trip)}</h1>
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+      <p class="trip-info__dates">${getDates(trip)}</p>
     </div>
     <p class="trip-info__cost">
       Total: &euro;&nbsp;<span class="trip-info__cost-value">${getPrice(trip)}</span>

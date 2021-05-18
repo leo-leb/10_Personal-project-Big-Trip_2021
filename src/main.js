@@ -5,9 +5,8 @@ import FilterPresenter from '@presenter/filter';
 import EventsModel from '@model/events';
 import FiltersModel from '@model/filter';
 import {render} from '@utils/render';
-import {generateEvent} from '@mock/event';
-import {EVENT_COUNT, RenderPosition, MocksCount, MenuItem} from 'consts';
-import {dataArrayAdapter} from '@utils/adapt';
+import {RenderPosition, MenuItem, UpdateType} from 'consts';
+import Api from './api';
 
 const headerElement = document.querySelector('.page-header');
 const infoElement = headerElement.querySelector('.trip-main');
@@ -17,19 +16,15 @@ const mainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = mainElement.querySelector('.trip-events');
 const menuComponent = new MenuView();
 
-const events = new Array(MocksCount.EVENTS).fill().map(generateEvent).slice(0, EVENT_COUNT);
+const AUTHORIZATION = 'Basic hS2ssiioo2lgnlk';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+
+const api = new Api(END_POINT, AUTHORIZATION);
 
 const eventsModel = new EventsModel();
 const filterModel = new FiltersModel();
 
-eventsModel.setEvents(dataArrayAdapter(events));
-
-render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
-render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
-
-const handleEventNewFormClose = () => {
-  menuComponent.setMenuItem(MenuItem.TABLE);
-};
+const handleEventNewFormClose = () => menuComponent.setMenuItem(MenuItem.TABLE);
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -49,7 +44,7 @@ menuComponent.setMenuClickHandler(handleMenuClick);
 const filterPresenter = new FilterPresenter(filterElement, filterModel, eventsModel);
 filterPresenter.init();
 
-const tripPresenter = new TripPresenter(tripEventsElement, eventsModel, filterModel);
+const tripPresenter = new TripPresenter(tripEventsElement, eventsModel, filterModel, api);
 tripPresenter.init(handleEventNewFormClose);
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
@@ -57,3 +52,15 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   tripPresenter.createEvent();
   evt.target.disabled = true;
 });
+
+api.getEvents()
+  .then((events) => {
+    eventsModel.setEvents(UpdateType.INIT, events);
+    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+  })
+  .catch(() => {
+    eventsModel.setEvents(UpdateType.INIT, []);
+    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+  });
