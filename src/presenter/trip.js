@@ -1,6 +1,7 @@
 import SortView from '@view/sort/sort';
 import EventListContainerView from '@view/event-list-container';
 import NoEventsView from '@view/no-events';
+import StatsView from '@view/stats';
 import EventPresenter from '@presenter/event';
 import EventNewPresenter from '@presenter/new-event';
 import {render, remove} from '@utils/render';
@@ -9,8 +10,8 @@ import {filter} from '@utils/filter';
 import {RenderPosition, SortType, UpdateType, UserAction, FilterType} from 'consts';
 
 export default class Trip {
-  constructor(tripContainer, eventsModel, filterModel) {
-    this._tripContainer = tripContainer;
+  constructor(parent, eventsModel, filterModel) {
+    this._parent = parent;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
 
@@ -28,20 +29,39 @@ export default class Trip {
     this._handleEventModeChange = this._handleEventModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._eventNewPresenter = new EventNewPresenter(this._eventListContainerComponent, this._handleViewAction);
   }
 
-  init() {
+  init(newEventClose) {
+    this._newEventCloseCallback = newEventClose;
+
+    this._eventsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderTrip();
+  }
+
+  destroy() {
+    this._clearTrip(true);
+
+    this._eventsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createEvent() {
     this._currentSort = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(this._newEventCloseCallback);
+  }
+
+  renderStats() {
+    const events = this._eventsModel.getEvents();
+    this._statsComponent = new StatsView(events);
+    render(this._parent.parentElement, this._statsComponent, RenderPosition.BEFOREEND);
+  }
+
+  removeStats() {
+    remove(this._statsComponent);
   }
 
   _getEvents() {
@@ -64,12 +84,12 @@ export default class Trip {
   _renderSort() {
     this._sortComponent = new SortView(this._currentSort);
     this._sortComponent.setSortClickHandler(this._handleSortTypeChange);
-    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._parent, this._sortComponent, RenderPosition.BEFOREEND);
 
   }
 
   _renderEventListContainer() {
-    render(this._tripContainer, this._eventListContainerComponent, RenderPosition.BEFOREEND);
+    render(this._parent, this._eventListContainerComponent, RenderPosition.BEFOREEND);
   }
 
   _renderEvent(event) {

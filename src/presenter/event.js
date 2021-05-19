@@ -5,8 +5,8 @@ import {isEscEvent} from '@utils/event';
 import {RenderPosition, EventMode, UserAction, UpdateType} from 'consts';
 
 export default class Event {
-  constructor(container, changeEventData, changeMode) {
-    this._eventContainer = container;
+  constructor(parrent, changeEventData, changeMode) {
+    this._parrent = parrent;
     this._changeEventData = changeEventData;
     this._changeMode = changeMode;
 
@@ -69,7 +69,7 @@ export default class Event {
   }
 
   _renderItem() {
-    render(this._eventContainer, this._itemComponent, RenderPosition.BEFOREEND);
+    render(this._parrent, this._itemComponent, RenderPosition.BEFOREEND);
   }
 
   _replaceItemToForm() {

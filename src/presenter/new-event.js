@@ -21,8 +21,8 @@ const BLANK_EVENT = {
 };
 
 export default class EventNew {
-  constructor(container, changeEventData) {
-    this._eventContainer = container;
+  constructor(parrent, changeEventData) {
+    this._parrent = parrent;
     this._changeEventData = changeEventData;
 
     this._formComponent = null;
@@ -32,7 +32,9 @@ export default class EventNew {
     this._handleFormEsc = this._handleFormEsc.bind(this);
   }
 
-  init() {
+  init(callback) {
+    this._destroyCallback = callback;
+
     if (this._formComponent !== null) {
       return;
     }
@@ -41,13 +43,17 @@ export default class EventNew {
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._formComponent.setFormDeleteHandler(this._handleCancelClick);
 
-    render(this._eventContainer, this._formComponent, RenderPosition.AFTERBEGIN);
+    render(this._parrent, this._formComponent, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this._handleFormEsc);
   }
 
   destroy() {
     if (this._formComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._formComponent);
