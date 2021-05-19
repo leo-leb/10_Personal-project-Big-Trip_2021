@@ -93,7 +93,7 @@ const renderTypeChart = (typeCtx, events, types) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13,
+            size: 15,
           },
           color: '#000000',
           anchor: 'end',
@@ -113,7 +113,7 @@ const renderTypeChart = (typeCtx, events, types) => {
           ticks: {
             fontColor: '#000000',
             padding: 5,
-            fontSize: 13,
+            fontSize: 15,
           },
           gridLines: {
             display: false,
@@ -162,7 +162,7 @@ const renderTimeSpendChart = (daysCtx, events, types) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13,
+            size: 15,
           },
           color: '#000000',
           anchor: 'end',
@@ -182,7 +182,7 @@ const renderTimeSpendChart = (daysCtx, events, types) => {
           ticks: {
             fontColor: '#000000',
             padding: 5,
-            fontSize: 13,
+            fontSize: 15,
           },
           gridLines: {
             display: false,
