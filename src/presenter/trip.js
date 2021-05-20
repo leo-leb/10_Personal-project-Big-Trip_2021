@@ -5,6 +5,7 @@ import StatsView from '@view/stats';
 import LoadingView from '@view/loading';
 import EventPresenter from '@presenter/event';
 import EventNewPresenter from '@presenter/new-event';
+import EventsModel from '@model/events';
 import {render, remove} from '@utils/render';
 import {getEventsByTime, getEventsByPrice, getEventsByDate} from '@utils/sort';
 import {filter} from '@utils/filter';
@@ -150,9 +151,13 @@ export default class Trip {
   }
 
   _handleViewAction(actionType, updateType, update) {
+    const adaptedUpdate = EventsModel.adaptToServer(update);
+
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._api.updateEvent(update).then((response) => this._eventsModel.updateEvent(updateType, response));
+        this._api.updateEvent(adaptedUpdate)
+          .then((response) => EventsModel.adaptToClient((response)))
+          .then((response) => this._eventsModel.updateEvent(updateType, response));
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);

@@ -18,19 +18,17 @@ export default class Api {
 
   getEvents() {
     return this._load({url: 'points'})
-      .then(Api.toJSON)
-      .then((events) => events.map(EventsModel.adaptToClient));
+      .then(Api.toJSON);
   }
 
   updateEvent(point) {
     return this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(EventsModel.adaptToServer(point)),
+      body: JSON.stringify(point),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON)
-      .then(EventsModel.adaptToClient);
+      .then(Api.toJSON);
   }
 
   _load({
