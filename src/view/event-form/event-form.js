@@ -15,6 +15,9 @@ export default class EventForm extends SmartView {
     this._originalData = cloneDeep(event);
     this._isAdd = isAdd;
 
+    // this._destinations = destinations;
+    // this._offers = offers;
+
     this._dateFromPicker = null;
     this._dateToPicker = null;
 
@@ -162,6 +165,7 @@ export default class EventForm extends SmartView {
     const target = evt.currentTarget.querySelector('.event__offer-title');
 
     const offers = this._data.offers.concat();
+
     const offersForDataType = offersMock.find((offer) => offer.type === this._data.type).offers;
 
     const isSameTitle = (item) => item.title === target.textContent;

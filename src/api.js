@@ -1,5 +1,3 @@
-import EventsModel from '@model/events';
-
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -18,6 +16,16 @@ export default class Api {
 
   getEvents() {
     return this._load({url: 'points'})
+      .then(Api.toJSON);
+  }
+
+  getDestinations() {
+    return this._load({url: 'destinations'})
+      .then(Api.toJSON);
+  }
+
+  getOffers() {
+    return this._load({url: 'offers'})
       .then(Api.toJSON);
   }
 

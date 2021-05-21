@@ -50,6 +50,7 @@ export const createEventFormTemplate = (isAdd, event) => {
   const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
 
   const offersForEventType = type.length > 1 ? offersMock.find((elem) => elem.type === type).offers : [];
+  // const offersForEventType = type.length > 1 ? offersLib.find((elem) => elem.type === type).offers : [];
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">

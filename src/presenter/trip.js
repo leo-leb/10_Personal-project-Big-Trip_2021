@@ -40,9 +40,14 @@ export default class Trip {
   init(newEventClose) {
     this._newEventCloseCallback = newEventClose;
 
+    // console.log(this._eventsModel.getOffers());
+    // console.log(this._eventsModel.getDestinations());
+    // console.log(this._eventsModel.getEvents());
+
     this._eventsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
+    this._renderSort();
     this._renderTrip();
   }
 
@@ -68,6 +73,14 @@ export default class Trip {
   removeStats() {
     remove(this._statsComponent);
   }
+
+  // setDestinations(destinations) {
+  //   this._destinations = destinations;
+  // }
+
+  // setOffers(offers) {
+  //   this._offers = offers;
+  // }
 
   _getEvents() {
     const filterType = this._filterModel.getFilter();
@@ -98,7 +111,7 @@ export default class Trip {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleViewAction, this._handleEventModeChange, this._handleEventDelete);
+    const eventPresenter = new EventPresenter(this._eventListContainerComponent, this._handleViewAction, this._handleEventModeChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
@@ -116,13 +129,15 @@ export default class Trip {
   }
 
   _renderTrip() {
+    // this._renderSort();
+    this._renderEventListContainer();
+
     if (this._isLoading) {
       this._renderLoading();
       return;
     }
 
-    this._renderSort();
-    this._renderEventListContainer();
+    console.log(this._getEvents().length);
 
     if (this._getEvents().length) {
       this._renderEvents();

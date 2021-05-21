@@ -44,21 +44,94 @@ filterPresenter.init();
 const tripPresenter = new TripPresenter(tripEventsElement, eventsModel, filterModel, api);
 tripPresenter.init(handleEventNewFormClose);
 
-document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
-  evt.preventDefault();
-  tripPresenter.createEvent();
-  evt.target.disabled = true;
-});
-
-api.getEvents()
-  .then((events) => events.map(EventsModel.adaptToClient))
-  .then((events) => {
-    eventsModel.setEvents(UpdateType.INIT, events);
+Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
+  .then((serverData) => {
+    console.log(serverData);
+    eventsModel.setData(UpdateType.INIT, serverData);
+    console.log(eventsModel.getEvents());
     render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
     render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
   })
-  .catch(() => {
-    eventsModel.setEvents(UpdateType.INIT, []);
-    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
-    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
-  });
+  .catch((error) => console.log(error));
+
+// const getData = async () => {
+//   const data = await Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()]);
+//   await eventsModel.setData(UpdateType.INIT, data);
+//   await render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+//   await render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+// };
+
+// getData();
+
+// api.getDestinations()
+//   .then((destinations) => {
+//     eventsModel.setDestinations(UpdateType.INIT, destinations);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+// api.getOffers()
+//   .then((offers) => {
+//     eventsModel.setOffers(UpdateType.INIT, offers);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+// api.getEvents()
+//   .then((events) => events.map(EventsModel.adaptToClient))
+//   .then((events) => {
+//     eventsModel.setEvents(UpdateType.INIT, events);
+//     render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+//     render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+//   })
+//   .catch(() => {
+//     eventsModel.setEvents(UpdateType.INIT, []);
+//     render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+//     render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+//   });
+
+// api.getEvents()
+//   .then((events) => {
+//     const destinations = api.getDestinations();
+//     const offers = api.getOffers();
+//     return {
+//       events: events.map(EventsModel.adaptToClient),
+//       destinations: destinations,
+//       offers: offers,
+//     };
+//   })
+//   .then((serverData) => {
+//     eventsModel.setData(UpdateType.INIT, serverData);
+//     render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+//     render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+//   })
+//   .catch((error) => console.log(error));
+
+
+
+// Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
+//   .then(() => console.log('All promises'));
+
+// api.getEvents()
+//   .then((events) => {
+//     const events = events;
+//     return api.getDestinations();
+//   })
+//   .then((resu))
+//   .then((serverData) => {
+//     eventsModel.setData(UpdateType.INIT, serverData);
+//     render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+//     render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+//   })
+//   .catch((error) => console.log(error));
+
+// console.log(eventsModel.getEvents());
+// console.log(eventsModel.getDestinations());
+
+// document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+//   evt.preventDefault();
+//   tripPresenter.createEvent();
+//   evt.target.disabled = true;
+// });

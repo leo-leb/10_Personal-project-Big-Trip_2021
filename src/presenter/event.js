@@ -31,7 +31,7 @@ export default class Event {
     const prevFormComponent = this._formComponent;
 
     this._itemComponent = new EventItemView(event);
-    this._formComponent = new EventFormView(false, event);
+    this._formComponent = new EventFormView(false, event, this._eventsModel);
 
     this._itemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._itemComponent.setRollUpClickHandler(this._handleItemRollUpClick);
