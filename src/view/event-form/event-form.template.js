@@ -2,7 +2,6 @@ import {createButtonRollUp} from '@view/common-templates/btn-roll-up.template';
 import {getFullDateSlashAndTime, stringToClass} from '@utils/transform';
 import {createElements} from '@utils/render';
 import {EventType, ButtonType} from 'consts';
-import {offersMock, destinations} from '@mock/event';
 
 const createOfferTemplate = (item, offers) => {
   const {title, price} = item;
@@ -42,15 +41,19 @@ const createDestinationList = (destinations) => {
   </datalist>`;
 };
 
-const createResetButtonTemplate = (type) => {
-  return `<button class="event__reset-btn" type="reset">${type}</button>`;
+const createResetButtonTemplate = (type, isDeleting) => {
+  if (type === ButtonType.CANCEL) {
+    return `<button class="event__reset-btn" type="reset">${ButtonType.CANCEL}</button>`;
+  } else {
+    return `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`;
+  }
 };
 
-export const createEventFormTemplate = (isAdd, event) => {
-  const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
+export const createEventFormTemplate = (isAdd, event, destinationsLib, offersLib) => {
+  // const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
+  const {basePrice, dateFrom, dateTo, destination, type, offers, isDisabled, isSaving, isDeleting} = event;
 
-  const offersForEventType = type.length > 1 ? offersMock.find((elem) => elem.type === type).offers : [];
-  // const offersForEventType = type.length > 1 ? offersLib.find((elem) => elem.type === type).offers : [];
+  const offersForEventType = type.length > 1 ? offersLib.find((elem) => elem.type === type).offers : [];
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -60,7 +63,7 @@ export const createEventFormTemplate = (isAdd, event) => {
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -74,16 +77,16 @@ export const createEventFormTemplate = (isAdd, event) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" list="destination-list-1" value=${destination.name}>
-          ${createDestinationList(destinations)}
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" list="destination-list-1" value=${destination.name} ${isDisabled ? 'disabled' : ''}>
+          ${createDestinationList(destinationsLib)}
         </div>
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value='${getFullDateSlashAndTime(dateFrom)}'>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value='${getFullDateSlashAndTime(dateFrom)}' ${isDisabled ? 'disabled' : ''}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value='${getFullDateSlashAndTime(dateTo)}'>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value='${getFullDateSlashAndTime(dateTo)}' ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -91,11 +94,11 @@ export const createEventFormTemplate = (isAdd, event) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value=${basePrice.toString()}>
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value=${basePrice.toString()} ${isDisabled ? 'disabled' : ''}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        ${isAdd ? createResetButtonTemplate(ButtonType.CANCEL) : createResetButtonTemplate(ButtonType.DELETE)}
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+        ${isAdd ? createResetButtonTemplate(ButtonType.CANCEL) : createResetButtonTemplate(ButtonType.DELETE, isDeleting)}
         ${isAdd ? '' : createButtonRollUp(ButtonType.CLOSE)}
       </header>
       <section class="event__details">

@@ -1,5 +1,4 @@
 import Observer from '@utils/observer';
-import { slice } from 'lodash';
 
 export default class Events extends Observer {
   constructor() {
@@ -9,33 +8,15 @@ export default class Events extends Observer {
     this._offers = [];
   }
 
-  // setEvents(updateType, events) {
-  //   this._events = events.slice();
-  //   this._notify(updateType);
-  // }
-
-  // setDestinations(updateType, destinations) {
-  //   this._destinations = destinations.slice();
-  //   this._notify(updateType);
-  // }
-
-  // setOffers(updateType, offers) {
-  //   this._offers = offers.slice();
-  //   this._notify(updateType);
-  // }
-
   setData(updateType, data) {
-    const {events, destinations, offers} = data;
+    this._events = data[0].map(this.constructor.adaptToClient).slice();
+    this._destinations = data[1].slice();
+    this._offers = data[2].slice();
 
-    // console.log(data);
-    // console.log(destinations);
-    // console.log(offers);
+    console.log(data[0]);
+    console.log(this._events);
 
     this._notify(updateType);
-
-    this._events = data[0].slice();
-    this._destinations = data[1];
-    this._offers = data[2];
   }
 
   getDestinations() {

@@ -1,7 +1,6 @@
 import EventFormView from '@view/event-form/event-form';
 import {render, remove} from '@utils/render';
 import {RenderPosition, UserAction, UpdateType} from 'consts';
-import {nanoid} from 'nanoid';
 import {isEscEvent} from '@utils/event';
 
 import dayjs from 'dayjs';
@@ -27,19 +26,25 @@ export default class EventNew {
 
     this._formComponent = null;
 
+    this._destinations = [];
+    this._offers = [];
+
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleCancelClick = this._handleCancelClick.bind(this);
     this._handleFormEsc = this._handleFormEsc.bind(this);
   }
 
-  init(callback) {
+  init(callback, eventsModel) {
     this._destroyCallback = callback;
 
     if (this._formComponent !== null) {
       return;
     }
 
-    this._formComponent = new EventFormView(true, BLANK_EVENT);
+    this._destinations = eventsModel.getDestinations();
+    this._offers = eventsModel.getOffers();
+
+    this._formComponent = new EventFormView(true, BLANK_EVENT, this._destinations, this._offers);
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._formComponent.setFormDeleteHandler(this._handleCancelClick);
 
@@ -61,13 +66,31 @@ export default class EventNew {
     document.removeEventListener('keydown', this._handleFormEsc);
   }
 
+  setSaving() {
+    this._formComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._formComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._formComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(event) {
     this._changeEventData(
       UserAction.ADD_EVENT,
       UpdateType.MAJOR,
-      Object.assign({id: nanoid()}, event),
+      event,
     );
-    this.destroy();
     document.querySelector('.trip-main__event-add-btn').disabled = false;
   }
 

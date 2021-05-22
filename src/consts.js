@@ -108,3 +108,9 @@ export const MenuItem = {
   TABLE: 'TABLE',
   STATS: 'STATS',
 };
+
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
