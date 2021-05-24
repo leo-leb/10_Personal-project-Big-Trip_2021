@@ -14,9 +14,10 @@ const getRoute = (trip) => {
 };
 
 const getDates = (trip) => {
+  const eventsList = trip.slice();
   const container = [];
-  container.push(getShortDate(trip.shift().dateFrom));
-  container.push(getShortDate(trip.pop().dateTo));
+  container.push(getShortDate(eventsList.shift().dateFrom));
+  container.push(getShortDate(eventsList.pop().dateTo));
   return container.join(' &mdash; ');
 };
 

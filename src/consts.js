@@ -1,6 +1,16 @@
 export const EVENT_COUNT = 4;
 export const AUTHORIZATION = 'Basic hS2ssiioo2lgnlmnk';
 export const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+export const STORE_EVENTS_PREFIX = 'EVENTS';
+export const STORE_DESTINATIONS_PREFIX = 'DESTINATIONS';
+export const STORE_OFFERS_PREFIX = 'OFFERS';
+export const STORE_VER = 'v1';
+
+export const StoreName = {
+  EVENTS: `${STORE_EVENTS_PREFIX}-${STORE_VER}`,
+  DESTINATIONS: `${STORE_DESTINATIONS_PREFIX}-${STORE_VER}`,
+  OFFERS: `${STORE_OFFERS_PREFIX}-${STORE_VER}`,
+};
 
 export const RenderPosition = {
   AFTERBEGIN: 'afterbegin',

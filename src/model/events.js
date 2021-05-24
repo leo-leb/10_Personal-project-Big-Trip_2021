@@ -9,12 +9,9 @@ export default class Events extends Observer {
   }
 
   setData(updateType, data) {
-    this._events = data[0].map(this.constructor.adaptToClient).slice();
+    this._events = data[0].map((data) => Events.adaptToClient(data)).slice();
     this._destinations = data[1].slice();
     this._offers = data[2].slice();
-
-    console.log(data[0]);
-    console.log(this._events);
 
     this._notify(updateType);
   }

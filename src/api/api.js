@@ -1,3 +1,5 @@
+const HEADERS = {'Content-Type': 'application/json'};
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -36,7 +38,7 @@ export default class Api {
       url: `points/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(point),
-      headers: new Headers({'Content-Type': 'application/json'}),
+      headers: new Headers(HEADERS),
     })
       .then(Api.toJSON);
   }
@@ -46,7 +48,7 @@ export default class Api {
       url: 'points',
       method: Method.POST,
       body: JSON.stringify(point),
-      headers: new Headers({'Content-Type': 'application/json'}),
+      headers: new Headers(HEADERS),
     })
       .then(Api.toJSON);
   }
@@ -56,6 +58,16 @@ export default class Api {
       url: `points/${point.id}`,
       method: Method.DELETE,
     });
+  }
+
+  sync(data) {
+    return this._load({
+      url: 'points/sync',
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers(HEADERS),
+    })
+      .then(Api.toJSON);
   }
 
   _load({
