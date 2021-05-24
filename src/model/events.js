@@ -4,11 +4,27 @@ export default class Events extends Observer {
   constructor() {
     super();
     this._events = [];
+    this._destinations = [];
+    this._offers = [];
   }
 
-  setEvents(updateType, events) {
-    this._events = events.slice();
+  setData(updateType, data) {
+    this._events = data[0].map(this.constructor.adaptToClient).slice();
+    this._destinations = data[1].slice();
+    this._offers = data[2].slice();
+
+    console.log(data[0]);
+    console.log(this._events);
+
     this._notify(updateType);
+  }
+
+  getDestinations() {
+    return this._destinations;
+  }
+
+  getOffers() {
+    return this._offers;
   }
 
   getEvents() {

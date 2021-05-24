@@ -1,8 +1,8 @@
-import EventsModel from '@model/events';
-
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 const SuccessHTTPStatusRange = {
@@ -18,19 +18,44 @@ export default class Api {
 
   getEvents() {
     return this._load({url: 'points'})
-      .then(Api.toJSON)
-      .then((events) => events.map(EventsModel.adaptToClient));
+      .then(Api.toJSON);
+  }
+
+  getDestinations() {
+    return this._load({url: 'destinations'})
+      .then(Api.toJSON);
+  }
+
+  getOffers() {
+    return this._load({url: 'offers'})
+      .then(Api.toJSON);
   }
 
   updateEvent(point) {
     return this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(EventsModel.adaptToServer(point)),
+      body: JSON.stringify(point),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON)
-      .then(EventsModel.adaptToClient);
+      .then(Api.toJSON);
+  }
+
+  addEvent(point) {
+    return this._load({
+      url: 'points',
+      method: Method.POST,
+      body: JSON.stringify(point),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    })
+      .then(Api.toJSON);
+  }
+
+  deleteEvent(point) {
+    return this._load({
+      url: `points/${point.id}`,
+      method: Method.DELETE,
+    });
   }
 
   _load({

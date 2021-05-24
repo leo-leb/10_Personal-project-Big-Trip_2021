@@ -2,16 +2,19 @@ import EventItemView from '@view/event-item/event-item';
 import EventFormView from '@view/event-form/event-form';
 import {render, replace, remove} from '@utils/render';
 import {isEscEvent} from '@utils/event';
-import {RenderPosition, EventMode, UserAction, UpdateType} from 'consts';
+import {RenderPosition, EventMode, UserAction, UpdateType, State} from 'consts';
 
 export default class Event {
-  constructor(parrent, changeEventData, changeMode) {
+  constructor(parrent, changeEventData, changeMode, eventsModel) {
     this._parrent = parrent;
     this._changeEventData = changeEventData;
     this._changeMode = changeMode;
 
     this._itemComponent = null;
     this._formComponent = null;
+
+    this._destinations = eventsModel.getDestinations();
+    this._offers = eventsModel.getOffers();
 
     this._mode = EventMode.ITEM;
 
@@ -31,7 +34,7 @@ export default class Event {
     const prevFormComponent = this._formComponent;
 
     this._itemComponent = new EventItemView(event);
-    this._formComponent = new EventFormView(false, event);
+    this._formComponent = new EventFormView(false, event, this._destinations, this._offers);
 
     this._itemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._itemComponent.setRollUpClickHandler(this._handleItemRollUpClick);
@@ -50,7 +53,8 @@ export default class Event {
     }
 
     if (this._mode === EventMode.FORM) {
-      replace(this._formComponent, prevFormComponent);
+      replace(this._itemComponent, prevFormComponent);
+      this._mode = EventMode.ITEM;
     }
 
     remove(prevItemComponent);
@@ -65,6 +69,35 @@ export default class Event {
   resetView() {
     if (this._mode !== EventMode.ITEM) {
       this._replaceFormToItem();
+    }
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._formComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._formComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._formComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._itemComponent.shake(resetFormState);
+        this._formComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -114,7 +147,7 @@ export default class Event {
       UpdateType.MINOR,
       event,
     );
-    this._replaceFormToItem();
+    // this._replaceFormToItem();
     document.removeEventListener('keydown', this._handleFormEsc);
   }
 

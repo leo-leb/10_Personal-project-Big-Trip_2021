@@ -5,7 +5,7 @@ import FilterPresenter from '@presenter/filter';
 import EventsModel from '@model/events';
 import FiltersModel from '@model/filter';
 import {render} from '@utils/render';
-import {RenderPosition, MenuItem, UpdateType} from 'consts';
+import {RenderPosition, MenuItem, UpdateType, AUTHORIZATION, END_POINT} from 'consts';
 import Api from './api';
 
 const headerElement = document.querySelector('.page-header');
@@ -15,9 +15,6 @@ const filterElement = headerElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = mainElement.querySelector('.trip-events');
 const menuComponent = new MenuView();
-
-const AUTHORIZATION = 'Basic hS2ssiioo2lgnlk';
-const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -47,20 +44,15 @@ filterPresenter.init();
 const tripPresenter = new TripPresenter(tripEventsElement, eventsModel, filterModel, api);
 tripPresenter.init(handleEventNewFormClose);
 
+Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
+  .then((serverData) => {
+    eventsModel.setData(UpdateType.INIT, serverData);
+    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+  });
+
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
   tripPresenter.createEvent();
   evt.target.disabled = true;
 });
-
-api.getEvents()
-  .then((events) => {
-    eventsModel.setEvents(UpdateType.INIT, events);
-    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
-    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
-  })
-  .catch(() => {
-    eventsModel.setEvents(UpdateType.INIT, []);
-    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
-    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
-  });

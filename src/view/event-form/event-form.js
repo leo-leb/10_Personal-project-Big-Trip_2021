@@ -1,6 +1,5 @@
 import SmartView from '@view/smart';
 import {createEventFormTemplate} from './event-form.template';
-import {offersMock, destinations} from '@mock/event';
 import flatpickr from 'flatpickr';
 import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import {cloneDeep} from 'lodash';
@@ -8,12 +7,15 @@ import dayjs from 'dayjs';
 import {getDefaultDate} from '@utils/transform';
 
 export default class EventForm extends SmartView {
-  constructor(isAdd, event) {
+  constructor(isAdd, event, destinations, offers) {
     super();
 
-    this._data = event;
+    this._data = EventForm.parseEventToData(event);
     this._originalData = cloneDeep(event);
     this._isAdd = isAdd;
+
+    this._destinations = destinations;
+    this._offers = offers;
 
     this._dateFromPicker = null;
     this._dateToPicker = null;
@@ -34,11 +36,11 @@ export default class EventForm extends SmartView {
   }
 
   getTemplate() {
-    return createEventFormTemplate(this._isAdd, this._data);
+    return createEventFormTemplate(this._isAdd, this._data, this._destinations, this._offers);
   }
 
   reset() {
-    this.updateData(this._originalData);
+    this.updateData(EventForm.parseEventToData(this._originalData));
   }
 
   restoreHandlers() {
@@ -126,12 +128,12 @@ export default class EventForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._data);
+    this._callback.formSubmit(EventForm.parseDataToEvent(this._data));
   }
 
   _formDeleteHandler(evt) {
     evt.preventDefault();
-    this._callback.formDelete(this._data);
+    this._callback.formDelete(EventForm.parseDataToEvent(this._data));
   }
 
   _typeClickHandler(evt) {
@@ -144,14 +146,15 @@ export default class EventForm extends SmartView {
 
   _priceInputHandler(evt) {
     evt.preventDefault();
+    const price = Number(evt.target.value);
     this.updateData({
-      basePrice: evt.target.value,
+      basePrice: price,
     }, true);
   }
 
   _destinationInputHandler(evt) {
     evt.preventDefault();
-    const newDestination = destinations.find((destination) => destination.name === evt.target.value);
+    const newDestination = this._destinations.find((destination) => destination.name === evt.target.value);
     this.updateData({
       destination: newDestination,
     });
@@ -162,7 +165,8 @@ export default class EventForm extends SmartView {
     const target = evt.currentTarget.querySelector('.event__offer-title');
 
     const offers = this._data.offers.concat();
-    const offersForDataType = offersMock.find((offer) => offer.type === this._data.type).offers;
+
+    const offersForDataType = this._offers.find((offer) => offer.type === this._data.type).offers;
 
     const isSameTitle = (item) => item.title === target.textContent;
 
@@ -189,5 +193,27 @@ export default class EventForm extends SmartView {
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._destinationInputHandler);
     this.getElement().querySelectorAll('.event__offer-selector').forEach((elem) => elem.addEventListener('click', this._offerClickHandler));
+  }
+
+  static parseEventToData(task) {
+    return Object.assign(
+      {},
+      task,
+      {
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      },
+    );
+  }
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
+    return data;
   }
 }
