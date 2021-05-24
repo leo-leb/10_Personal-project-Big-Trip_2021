@@ -3,6 +3,8 @@ import EventFormView from '@view/event-form/event-form';
 import {render, replace, remove} from '@utils/render';
 import {isEscEvent} from '@utils/event';
 import {RenderPosition, EventMode, UserAction, UpdateType, State} from 'consts';
+import {toast} from '@utils/toast';
+import {isOnline} from '@utils/common';
 
 export default class Event {
   constructor(parrent, changeEventData, changeMode, eventsModel) {
@@ -142,6 +144,11 @@ export default class Event {
   }
 
   _handleFormSubmit(event) {
+    if (!isOnline()) {
+      toast('You can\'t save event offline');
+      return;
+    }
+
     this._changeEventData(
       UserAction.UPDATE_EVENT,
       UpdateType.MINOR,
@@ -159,6 +166,11 @@ export default class Event {
   }
 
   _handleFormDelete(event) {
+    if (!isOnline()) {
+      toast('You can\'t delent event offline');
+      return;
+    }
+
     this._changeEventData(
       UserAction.DELETE_EVENT,
       UpdateType.MINOR,

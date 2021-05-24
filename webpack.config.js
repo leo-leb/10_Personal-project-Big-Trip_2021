@@ -22,6 +22,7 @@ module.exports = {
   resolve: {
     alias: {
       '@source': path.resolve(__dirname, 'src'),
+      '@api': path.resolve(__dirname, 'src/api'),
       '@mock': path.resolve(__dirname, 'src/mock'),
       '@utils': path.resolve(__dirname, 'src/utils'),
       '@model': path.resolve(__dirname, 'src/model'),
