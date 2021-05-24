@@ -46,6 +46,8 @@ const handleMenuClick = (menuItem) => {
   }
 };
 
+console.log('привет!');
+
 menuComponent.setMenuClickHandler(handleMenuClick);
 
 const filterPresenter = new FilterPresenter(filterElement, filterModel, eventsModel);

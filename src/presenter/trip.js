@@ -184,10 +184,12 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearTrip();
+        this._renderSort();
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
         this._clearTrip(true);
+        this._renderSort();
         this._renderTrip();
         break;
       case UpdateType.INIT:
