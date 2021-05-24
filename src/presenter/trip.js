@@ -91,7 +91,6 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSort);
     this._sortComponent.setSortClickHandler(this._handleSortTypeChange);
     render(this._parent, this._sortComponent, RenderPosition.BEFOREEND);
-
   }
 
   _renderEventListContainer() {

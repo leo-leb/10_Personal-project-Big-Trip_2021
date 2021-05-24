@@ -25,7 +25,7 @@ export default class Menu extends AbstractView {
     evt.preventDefault();
     const actualValue = evt.target.dataset.value;
 
-    if (actualValue === this._currentVluea) {
+    if (actualValue === this._currentValue) {
       return;
     }
 
