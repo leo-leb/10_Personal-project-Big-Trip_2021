@@ -6,14 +6,28 @@ import {transformDurationToString} from '@utils/transform';
 
 const renderMoneyChart = (moneyCtx, events, types) => {
   const priceByEventType = types.map((type) => countEventPriceByTypes(events, type));
+  let data = [];
+  const someFunc = () => {
+    for (let i = 0; i < types.length; i++) {
+      data.push({
+        type: types[i],
+        price: priceByEventType[i],
+      });
+    }
+    return data;
+  };
+  const result = someFunc().sort((firstItem, secondItem) => {
+    return secondItem.price - firstItem.price;
+  });
+  data = result;
 
   return new Chart (moneyCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: types.map((item) => item.toUpperCase()),
+      labels: data.map((item) => item.type.toUpperCase()),
       datasets: [{
-        data: priceByEventType,
+        data: data.map((item) => item.price),
         backgroundColor: '#158deb',
         hoverBackgroundColor: '#158deb',
         anchor: 'start',
@@ -76,14 +90,28 @@ const renderMoneyChart = (moneyCtx, events, types) => {
 
 const renderTypeChart = (typeCtx, events, types) => {
   const eventByTypeCounts = types.map((type) => countEventsByType(events, type));
+  let data = [];
+  const someFunc = () => {
+    for (let i = 0; i < types.length; i++) {
+      data.push({
+        type: types[i],
+        count: eventByTypeCounts[i],
+      });
+    }
+    return data;
+  };
+  const result = someFunc().sort((firstItem, secondItem) => {
+    return secondItem.count - firstItem.count;
+  });
+  data = result;
 
   return new Chart (typeCtx, {
     plugins: types,
     type: 'horizontalBar',
     data: {
-      labels: types.map((item) => item.toUpperCase()),
+      labels: data.map((item) => item.type.toUpperCase()),
       datasets: [{
-        data: eventByTypeCounts,
+        data: data.map((item) => item.count),
         backgroundColor: '#158deb',
         hoverBackgroundColor: '#158deb',
         anchor: 'start',
@@ -145,14 +173,28 @@ const renderTypeChart = (typeCtx, events, types) => {
 
 const renderTimeSpendChart = (daysCtx, events, types) => {
   const eventByTimeDuration = types.map((type) => countEventDurationByTypes(events, type));
+  let data = [];
+  const someFunc = () => {
+    for (let i = 0; i < types.length; i++) {
+      data.push({
+        type: types[i],
+        duration: eventByTimeDuration[i],
+      });
+    }
+    return data;
+  };
+  const result = someFunc().sort((firstItem, secondItem) => {
+    return secondItem.duration - firstItem.duration;
+  });
+  data = result;
 
   return new Chart (daysCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: types.map((item) => item.toUpperCase()),
+      labels: data.map((item) => item.type.toUpperCase()),
       datasets: [{
-        data: eventByTimeDuration,
+        data: data.map((item) => item.duration),
         backgroundColor: '#158deb',
         hoverBackgroundColor: '#158deb',
         anchor: 'start',
@@ -233,7 +275,7 @@ export default class Stats extends AbstractView {
 
     this._data = events;
 
-    this._moneyCart = null;
+    this._moneyChart = null;
     this._typeChart = null;
     this._timeChart = null;
 
@@ -247,8 +289,8 @@ export default class Stats extends AbstractView {
   }
 
   _setCharts() {
-    if (this._moneyCart !== null || this._typeChart !== null || this._timeChart !== null) {
-      this._moneyCart = null;
+    if (this._moneyChart !== null || this._typeChart !== null || this._timeChart !== null) {
+      this._moneyChart = null;
       this._typeChart = null;
       this._timeChart = null;
     }
@@ -257,7 +299,7 @@ export default class Stats extends AbstractView {
     const typeCtx = this.getElement().querySelector('.statistics__chart--transport');
     const daysCtx = this.getElement().querySelector('.statistics__chart--time');
 
-    this._moneyCart = renderMoneyChart(moneyCtx, this._data, this._uniqTypes);
+    this._moneyChart = renderMoneyChart(moneyCtx, this._data, this._uniqTypes);
     this._typeChart = renderTypeChart(typeCtx, this._data, this._uniqTypes);
     this._timeChart = renderTimeSpendChart(daysCtx, this._data, this._uniqTypes);
   }
