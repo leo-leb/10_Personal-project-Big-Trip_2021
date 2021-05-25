@@ -138,6 +138,15 @@ export default class EventForm extends SmartView {
 
   _typeClickHandler(evt) {
     evt.preventDefault();
+
+    if (this._originalData.type === evt.target.dataset.type) {
+      this.updateData({
+        type: this._originalData.type,
+        offers: this._originalData.offers,
+      });
+      return;
+    }
+
     this.updateData({
       type: evt.target.dataset.type,
       offers: [],
