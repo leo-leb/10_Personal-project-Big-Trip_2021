@@ -91,7 +91,6 @@ export default class Trip {
     this._sortComponent = new SortView(this._currentSort);
     this._sortComponent.setSortClickHandler(this._handleSortTypeChange);
     render(this._parent, this._sortComponent, RenderPosition.BEFOREEND);
-
   }
 
   _renderEventListContainer() {
@@ -184,10 +183,12 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearTrip();
+        this._renderSort();
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
         this._clearTrip(true);
+        this._renderSort();
         this._renderTrip();
         break;
       case UpdateType.INIT:

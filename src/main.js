@@ -1,7 +1,7 @@
-import InfoView from '@view/info/info';
 import MenuView from '@view/menu';
 import TripPresenter from '@presenter/trip';
 import FilterPresenter from '@presenter/filter';
+import InfoPresenter from '@presenter/info';
 import EventsModel from '@model/events';
 import FiltersModel from '@model/filter';
 import Api from '@api/api';
@@ -54,13 +54,15 @@ filterPresenter.init();
 const tripPresenter = new TripPresenter(tripEventsElement, eventsModel, filterModel, apiWithProvider);
 tripPresenter.init(handleEventNewFormClose);
 
+const infoPresenter = new InfoPresenter(infoElement, eventsModel);
+
 Promise.all([
   apiWithProvider.getEvents(),
   apiWithProvider.getDestinations(),
   apiWithProvider.getOffers()])
   .then((serverData) => eventsModel.setData(UpdateType.INIT, serverData))
   .then(() => {
-    render(infoElement, new InfoView(eventsModel.getEvents()), RenderPosition.AFTERBEGIN);
+    infoPresenter.init();
     render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
   });
 

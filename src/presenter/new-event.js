@@ -96,11 +96,13 @@ export default class EventNew {
 
   _handleCancelClick() {
     this.destroy();
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
   }
 
   _handleFormEsc(evt) {
     isEscEvent(evt, () => {
       this.destroy();
+      document.querySelector('.trip-main__event-add-btn').disabled = false;
     });
   }
 }
