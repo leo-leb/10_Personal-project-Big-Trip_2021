@@ -18,6 +18,23 @@ const createOfferTemplate = (item, offers) => {
   </div>`;
 };
 
+const createOffersContainer = (offersForEventType, offers) => {
+  return `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">
+      ${offersForEventType.map((item) => createOfferTemplate(item, offers)).join('')}
+    </div>
+  </section>`;
+};
+
+const createDestinationsContainer = (destination, isAdd) => {
+  return `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    ${destination.description.length > 0 ? createDescriptionTemplate(destination) : ''}
+    ${isAdd && destination.pictures.length > 0 ? createPhotosTemplate(destination) : ''}
+</section>`;
+};
+
 const createTypeTemplate = (type) => {
   const lowerType = type.toLowerCase();
 
@@ -35,6 +52,10 @@ const createPhotosTemplate = (destination) => {
   </div>`;
 };
 
+const createDescriptionTemplate = (destination) => {
+  return `<p class="event__destination-description">${destination.description}</p>`;
+};
+
 const createDestinationList = (destinations) => {
   return `<datalist id="destination-list-1">
     ${createElements(destinations.map((point) => point.name), (name) => {return `<option value=${name}>`;})}
@@ -50,9 +71,7 @@ const createResetButtonTemplate = (type, isDeleting) => {
 };
 
 export const createEventFormTemplate = (isAdd, event, destinationsLib, offersLib) => {
-  // const {basePrice, dateFrom, dateTo, destination, type, offers} = event;
   const {basePrice, dateFrom, dateTo, destination, type, offers, isDisabled, isSaving, isDeleting} = event;
-
   const offersForEventType = type.length > 1 ? offersLib.find((elem) => elem.type === type).offers : [];
 
   return `<li class="trip-events__item">
@@ -61,7 +80,7 @@ export const createEventFormTemplate = (isAdd, event, destinationsLib, offersLib
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            ${type.length > 0 ? `<img class="event__type-icon" width="17" height="17" alt="Event type icon" src="img/icons/${type}.png"></img>` : ''}
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
@@ -102,17 +121,8 @@ export const createEventFormTemplate = (isAdd, event, destinationsLib, offersLib
         ${isAdd ? '' : createButtonRollUp(ButtonType.CLOSE)}
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">
-            ${offersForEventType.map((item) => createOfferTemplate(item, offers)).join('')}
-          </div>
-        </section>
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
-          ${isAdd ? createPhotosTemplate(destination) : ''}
-        </section>
+        ${offersForEventType.length > 0 ? createOffersContainer(offersForEventType, offers) : ''}
+        ${destination.description.length === 0 && destination.pictures.length === 0 ? '' : createDestinationsContainer(destination, isAdd)}
       </section>
     </form>
   </li>`;

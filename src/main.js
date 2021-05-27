@@ -7,8 +7,9 @@ import FiltersModel from '@model/filter';
 import Api from '@api/api';
 import Store from '@api/store';
 import Provider from '@api/provider';
+import {AUTHORIZATION, END_POINT} from '@api/consts';
 import {render} from '@utils/render';
-import {RenderPosition, MenuItem, UpdateType, AUTHORIZATION, END_POINT, StoreName} from 'consts';
+import {RenderPosition, MenuItem, UpdateType, StoreName} from 'consts';
 import {isOnline} from '@utils/common';
 import {toast} from '@utils/toast';
 
@@ -68,11 +69,17 @@ Promise.all([
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
+
+  if (menuComponent.getCurrentValue() === MenuItem.STATS) {
+    return;
+  }
+
   if (!isOnline()) {
     toast('You can\'t create new event offline');
     menuComponent.setMenuClickHandler(MenuItem.TABLE);
     return;
   }
+
   tripPresenter.createEvent();
   evt.target.disabled = true;
 });

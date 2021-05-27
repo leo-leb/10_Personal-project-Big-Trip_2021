@@ -74,7 +74,7 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateFrom) {
-      const date = this._isAdd === true ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH/MM');
+      const date = this._isAdd === true ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH:MM');
 
       this._dateFromPicker = flatpickr(
         this.getElement().querySelector('#event-start-time-1'),
@@ -95,7 +95,7 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateTo) {
-      const date = this._isAdd === true ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH/MM');
+      const date = this._isAdd === true ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH:MM');
 
       this._dateToPicker = flatpickr(
         this.getElement().querySelector('#event-end-time-1'),
@@ -110,12 +110,18 @@ export default class EventForm extends SmartView {
   }
 
   _dateFromChangeHandler([userDate]) {
+    if (getDefaultDate(userDate) > this._data.dateTo) {
+      return;
+    }
     this.updateData({
       dateFrom: getDefaultDate(userDate),
     });
   }
 
   _dateToChangeHandler([userDate]) {
+    if (getDefaultDate(userDate) < this._data.dateFrom) {
+      return;
+    }
     this.updateData({
       dateTo: getDefaultDate(userDate),
     });
@@ -128,6 +134,14 @@ export default class EventForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
+    if (getDefaultDate(this._dateFromPicker.latestSelectedDateObj) > this._data.dateTo) {
+      this.shake();
+      return;
+    }
+    if (getDefaultDate(this._dateToPicker.latestSelectedDateObj) < this._data.dateFrom) {
+      this.shake();
+      return;
+    }
     this._callback.formSubmit(EventForm.parseDataToEvent(this._data));
   }
 
@@ -138,6 +152,15 @@ export default class EventForm extends SmartView {
 
   _typeClickHandler(evt) {
     evt.preventDefault();
+
+    if (this._originalData.type === evt.target.dataset.type) {
+      this.updateData({
+        type: this._originalData.type,
+        offers: this._originalData.offers,
+      });
+      return;
+    }
+
     this.updateData({
       type: evt.target.dataset.type,
       offers: [],

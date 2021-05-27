@@ -3,8 +3,8 @@ import {render, replace, remove} from '@utils/render';
 import {RenderPosition} from 'consts';
 
 export default class Info {
-  constructor(parrent, eventsModel) {
-    this._parrent = parrent;
+  constructor(parent, eventsModel) {
+    this._parent = parent;
     this._eventsModel = eventsModel;
 
     this._infoComponent = null;
@@ -20,7 +20,7 @@ export default class Info {
     this._infoComponent = new InfoView(this._eventsModel.getEvents());
 
     if (prevInfoComponent === null) {
-      render(this._parrent, this._infoComponent, RenderPosition.AFTERBEGIN);
+      render(this._parent, this._infoComponent, RenderPosition.AFTERBEGIN);
       return;
     }
 

@@ -7,8 +7,8 @@ import {toast} from '@utils/toast';
 import {isOnline} from '@utils/common';
 
 export default class Event {
-  constructor(parrent, changeEventData, changeMode, eventsModel) {
-    this._parrent = parrent;
+  constructor(parent, changeEventData, changeMode, eventsModel) {
+    this._parent = parent;
     this._changeEventData = changeEventData;
     this._changeMode = changeMode;
 
@@ -104,7 +104,7 @@ export default class Event {
   }
 
   _renderItem() {
-    render(this._parrent, this._itemComponent, RenderPosition.BEFOREEND);
+    render(this._parent, this._itemComponent, RenderPosition.BEFOREEND);
   }
 
   _replaceItemToForm() {

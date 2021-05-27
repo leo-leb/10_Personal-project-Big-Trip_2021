@@ -21,6 +21,10 @@ export default class Menu extends AbstractView {
     return createMenuTemplate();
   }
 
+  getCurrentValue() {
+    return this._currentValue;
+  }
+
   _menuClickHandler(evt) {
     evt.preventDefault();
     const actualValue = evt.target.dataset.value;

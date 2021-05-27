@@ -8,14 +8,6 @@ export default class Events extends Observer {
     this._offers = [];
   }
 
-  setData(updateType, data) {
-    this._events = data[0].map((data) => Events.adaptToClient(data)).slice();
-    this._destinations = data[1].slice();
-    this._offers = data[2].slice();
-
-    this._notify(updateType);
-  }
-
   getDestinations() {
     return this._destinations;
   }
@@ -28,7 +20,15 @@ export default class Events extends Observer {
     return this._events;
   }
 
-  addEvent(updateType, update) {
+  async setData(updateType, data) {
+    this._events = data[0].map((data) => Events.adaptToClient(data)).slice();
+    this._destinations = data[1].slice();
+    this._offers = data[2].slice();
+
+    this._notify(updateType);
+  }
+
+  async addEvent(updateType, update) {
     this._events = [
       update,
       ...this._events,
@@ -37,7 +37,7 @@ export default class Events extends Observer {
     this._notify(updateType, update);
   }
 
-  deleteEvent(updateType, update) {
+  async deleteEvent(updateType, update) {
     const index = this._events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -52,7 +52,7 @@ export default class Events extends Observer {
     this._notify(updateType);
   }
 
-  updateEvent(updateType, update) {
+  async updateEvent(updateType, update) {
     const index = this._events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
