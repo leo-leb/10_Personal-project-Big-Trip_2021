@@ -68,11 +68,17 @@ Promise.all([
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
+
+  if (menuComponent.getCurrentValue() === MenuItem.STATS) {
+    return;
+  }
+
   if (!isOnline()) {
     toast('You can\'t create new event offline');
     menuComponent.setMenuClickHandler(MenuItem.TABLE);
     return;
   }
+
   tripPresenter.createEvent();
   evt.target.disabled = true;
 });
