@@ -5,8 +5,6 @@ import '../../../node_modules/flatpickr/dist/flatpickr.min.css';
 import {cloneDeep} from 'lodash';
 import dayjs from 'dayjs';
 import {getDefaultDate} from '@utils/transform';
-import {State} from 'consts';
-
 
 export default class EventForm extends SmartView {
   constructor(isAdd, event, destinations, offers) {

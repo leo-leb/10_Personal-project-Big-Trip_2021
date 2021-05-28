@@ -116,7 +116,7 @@ export default class Provider {
         [current.id]: current,
       });
     }, {});
-  };
+  }
 
   _createDestinationsStoreStructure(items) {
     return items.reduce((acc, current) => {
@@ -124,7 +124,7 @@ export default class Provider {
         [current.name]: current,
       });
     }, {});
-  };
+  }
 
   _createOffersStoreStructure(items) {
     return items.reduce((acc, current) => {
@@ -132,5 +132,5 @@ export default class Provider {
         [current.type]: current,
       });
     }, {});
-  };
+  }
 }

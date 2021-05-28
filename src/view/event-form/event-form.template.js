@@ -80,10 +80,7 @@ export const createEventFormTemplate = (isAdd, event, destinationsLib, offersLib
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            ${type.length > 0 ?
-              `<img class="event__type-icon" width="17" height="17" alt="Event type icon" src="img/icons/${type}.png"></img>` :
-              ''
-            }
+            ${type.length > 0 ? `<img class="event__type-icon" width="17" height="17" alt="Event type icon" src="img/icons/${type}.png"></img>` : ''}
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
