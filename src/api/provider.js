@@ -5,30 +5,6 @@ const getSyncedEvents = (items) => {
     .map(({payload}) => payload.event);
 };
 
-const createStoreStructure = (items) => {
-  return items.reduce((acc, current) => {
-    return Object.assign({}, acc, {
-      [current.id]: current,
-    });
-  }, {});
-};
-
-const createStore1Structure = (items) => {
-  return items.reduce((acc, current) => {
-    return Object.assign({}, acc, {
-      [current.name]: current,
-    });
-  }, {});
-};
-
-const createStore2Structure = (items) => {
-  return items.reduce((acc, current) => {
-    return Object.assign({}, acc, {
-      [current.type]: current,
-    });
-  }, {});
-};
-
 export default class Provider {
   constructor(api, storeEvents, storeDestinations, storeOffers) {
     this._api = api;
@@ -42,7 +18,8 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getEvents()
         .then((events) => {
-          const items = createStoreStructure(events);
+          // const items = createStoreStructure(events);
+          const items = this._createEventsStoreStructure(events);
           this._storeEvents.setItems(items);
           return events;
         });
@@ -56,7 +33,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getDestinations()
         .then((destinations) => {
-          const items = createStore1Structure(destinations);
+          const items = this._createDestinationsStoreStructure(destinations);
           this._storeDestinations.setItems(items);
           return destinations;
         });
@@ -70,7 +47,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          const items = createStore2Structure(offers);
+          const items = this._createOffersStoreStructure(offers);
           this._storeOffers.setItems(items);
           return offers;
         });
@@ -124,7 +101,7 @@ export default class Provider {
           const createdEvents = getSyncedEvents(response.created);
           const updatedEvents = getSyncedEvents(response.updated);
 
-          const items = createStoreStructure([...createdEvents, ...updatedEvents]);
+          const items = this._createEventsStoreStructure([...createdEvents, ...updatedEvents]);
 
           this._storeEvents.setItems(items);
         });
@@ -132,4 +109,28 @@ export default class Provider {
 
     return Promise.reject(new Error('Sync data failed'));
   }
+
+  _createEventsStoreStructure(items) {
+    return items.reduce((acc, current) => {
+      return Object.assign({}, acc, {
+        [current.id]: current,
+      });
+    }, {});
+  };
+
+  _createDestinationsStoreStructure(items) {
+    return items.reduce((acc, current) => {
+      return Object.assign({}, acc, {
+        [current.name]: current,
+      });
+    }, {});
+  };
+
+  _createOffersStoreStructure(items) {
+    return items.reduce((acc, current) => {
+      return Object.assign({}, acc, {
+        [current.type]: current,
+      });
+    }, {});
+  };
 }

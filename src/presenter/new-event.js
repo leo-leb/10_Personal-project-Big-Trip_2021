@@ -20,8 +20,8 @@ const BLANK_EVENT = {
 };
 
 export default class EventNew {
-  constructor(parrent, changeEventData) {
-    this._parrent = parrent;
+  constructor(parent, changeEventData) {
+    this._parent = parent;
     this._changeEventData = changeEventData;
 
     this._formComponent = null;
@@ -48,7 +48,7 @@ export default class EventNew {
     this._formComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._formComponent.setFormDeleteHandler(this._handleCancelClick);
 
-    render(this._parrent, this._formComponent, RenderPosition.AFTERBEGIN);
+    render(this._parent, this._formComponent, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this._handleFormEsc);
   }
 

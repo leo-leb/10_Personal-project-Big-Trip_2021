@@ -4,8 +4,8 @@ import {render, replace, remove} from '@utils/render.js';
 import {filter} from '@utils/filter';
 
 export default class Filter {
-  constructor(parrent, filterModel, eventsModel) {
-    this._parrent = parrent;
+  constructor(parent, filterModel, eventsModel) {
+    this._parent = parent;
     this._filterModel = filterModel;
     this._eventsModel = eventsModel;
 
@@ -26,7 +26,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._parrent, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._parent, this._filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 

@@ -74,13 +74,15 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateFrom) {
-      const date = this._isAdd === true ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH/MM');
+      const date = this._isAdd === true ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH:MM');
+
+      console.log('Дата от:', date);
 
       this._dateFromPicker = flatpickr(
         this.getElement().querySelector('#event-start-time-1'),
         {
           enableTime: true,
-          dateFormat: 'd/m/y H:i',
+          dateFormat: 'd.m H:i',
           defaultDate: date,
           onChange: this._dateFromChangeHandler,
         },
@@ -95,7 +97,9 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateTo) {
-      const date = this._isAdd === true ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH/MM');
+      const date = this._isAdd === true ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH:MM');
+
+      console.log('Дата до:', date);
 
       this._dateToPicker = flatpickr(
         this.getElement().querySelector('#event-end-time-1'),
@@ -110,12 +114,20 @@ export default class EventForm extends SmartView {
   }
 
   _dateFromChangeHandler([userDate]) {
+    if (getDefaultDate(userDate) > this._data.dateTo) {
+      console.log('здесь');
+      return;
+    }
     this.updateData({
       dateFrom: getDefaultDate(userDate),
     });
   }
 
   _dateToChangeHandler([userDate]) {
+    if (getDefaultDate(userDate) < this._data.dateFrom) {
+      console.log('здесь');
+      return;
+    }
     this.updateData({
       dateTo: getDefaultDate(userDate),
     });
