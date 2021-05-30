@@ -7,8 +7,6 @@ import {transformDurationToString} from '@utils/transform';
 const renderMoneyChart = (moneyCtxElement, events, types) => {
   const priceByEventType = types.map((type) => countEventPriceByTypes(events, type));
   let data = [];
-  console.log(types);
-  console.log(priceByEventType);
   const getPriceOfTypes = () => {
     for (const type of types) {
       data.push({
