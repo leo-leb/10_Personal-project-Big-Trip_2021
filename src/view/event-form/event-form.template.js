@@ -65,9 +65,9 @@ const createDestinationList = (destinations) => {
 const createResetButtonTemplate = (type, isDeleting) => {
   if (type === ButtonType.CANCEL) {
     return `<button class="event__reset-btn" type="reset">${ButtonType.CANCEL}</button>`;
-  } else {
-    return `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`;
   }
+
+  return `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`;
 };
 
 export const createEventFormTemplate = (isAdd, event, destinationsLib, offersLib) => {

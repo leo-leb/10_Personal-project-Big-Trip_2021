@@ -25,6 +25,21 @@ export default class Menu extends AbstractView {
     return this._currentValue;
   }
 
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().addEventListener('click', this._menuClickHandler);
+  }
+
+  setMenuItem(actualValue) {
+    const currentlItemElement = this.getElement().querySelector(`[data-value=${this._currentValue}]`);
+    const actualItemElement = this.getElement().querySelector(`[data-value=${actualValue}]`);
+
+    currentlItemElement.classList.remove('trip-tabs__btn--active');
+    actualItemElement.classList.add('trip-tabs__btn--active');
+
+    this._currentValue = actualValue;
+  }
+
   _menuClickHandler(evt) {
     evt.preventDefault();
     const actualValue = evt.target.dataset.value;
@@ -35,20 +50,5 @@ export default class Menu extends AbstractView {
 
     this.setMenuItem(actualValue);
     this._callback.menuClick(actualValue);
-  }
-
-  setMenuClickHandler(callback) {
-    this._callback.menuClick = callback;
-    this.getElement().addEventListener('click', this._menuClickHandler);
-  }
-
-  setMenuItem(actualValue) {
-    const currentlItem = this.getElement().querySelector(`[data-value=${this._currentValue}]`);
-    const actualItem = this.getElement().querySelector(`[data-value=${actualValue}]`);
-
-    currentlItem.classList.remove('trip-tabs__btn--active');
-    actualItem.classList.add('trip-tabs__btn--active');
-
-    this._currentValue = actualValue;
   }
 }

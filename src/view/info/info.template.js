@@ -8,9 +8,9 @@ const getRoute = (trip) => {
 
   if (routeList.length <= POINTS_LIMIT) {
     return routeList.join(' &mdash; ');
-  } else {
-    return routeList.slice(0, 1).concat(routeList.slice(-1)).join(' &mdash; ... &mdash; ');
   }
+
+  return routeList.slice(0, 1).concat(routeList.slice(-1)).join(' &mdash; ... &mdash; ');
 };
 
 const getDates = (trip) => {

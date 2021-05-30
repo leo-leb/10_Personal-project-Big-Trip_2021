@@ -15,7 +15,7 @@ import {toast} from '@utils/toast';
 
 const headerElement = document.querySelector('.page-header');
 const infoElement = headerElement.querySelector('.trip-main');
-const menuContainer = headerElement.querySelector('.trip-controls__navigation');
+const menuContainerElement = headerElement.querySelector('.trip-controls__navigation');
 const filterElement = headerElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-body__page-main');
 const tripEventsElement = mainElement.querySelector('.trip-events');
@@ -64,7 +64,7 @@ Promise.all([
   .then((serverData) => eventsModel.setData(UpdateType.INIT, serverData))
   .then(() => {
     infoPresenter.init();
-    render(menuContainer, menuComponent, RenderPosition.BEFOREEND);
+    render(menuContainerElement, menuComponent, RenderPosition.BEFOREEND);
   });
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {

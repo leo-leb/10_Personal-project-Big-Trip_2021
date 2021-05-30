@@ -1,7 +1,7 @@
 import Abstract from '@view/abstract';
 import {RenderPosition} from 'consts';
 
-export const render = (container, element, place) => {
+const render = (container, element, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
   }
@@ -22,7 +22,7 @@ export const render = (container, element, place) => {
   }
 };
 
-export const replace = (newChild, oldChild) => {
+const replace = (newChild, oldChild) => {
   if (newChild instanceof Abstract) {
     newChild = newChild.getElement();
   }
@@ -40,7 +40,7 @@ export const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-export const remove = (component) => {
+const remove = (component) => {
   if (component === null) {
     return;
   }
@@ -53,12 +53,14 @@ export const remove = (component) => {
   component.removeElement();
 };
 
-export const createElement = (template) => {
+const createElement = (template) => {
   const newElement = document.createElement('div');
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
 
-export const createElements = (source, createItem) => {
+const createElements = (source, createItem) => {
   return source.map((value) => createItem(value)).join('');
 };
+
+export {render, replace, remove, createElement, createElements};

@@ -19,6 +19,8 @@ const BLANK_EVENT = {
   offers: [],
 };
 
+const btnAddElement = document.querySelector('.trip-main__event-add-btn');
+
 export default class EventNew {
   constructor(parent, changeEventData) {
     this._parent = parent;
@@ -91,18 +93,18 @@ export default class EventNew {
       UpdateType.MAJOR,
       event,
     );
-    document.querySelector('.trip-main__event-add-btn').disabled = false;
+    btnAddElement.disabled = false;
   }
 
   _handleCancelClick() {
     this.destroy();
-    document.querySelector('.trip-main__event-add-btn').disabled = false;
+    btnAddElement.disabled = false;
   }
 
   _handleFormEsc(evt) {
     isEscEvent(evt, () => {
       this.destroy();
-      document.querySelector('.trip-main__event-add-btn').disabled = false;
+      btnAddElement.disabled = false;
     });
   }
 }

@@ -154,7 +154,7 @@ export default class Event {
       UpdateType.MINOR,
       event,
     );
-    // this._replaceFormToItem();
+
     document.removeEventListener('keydown', this._handleFormEsc);
   }
 

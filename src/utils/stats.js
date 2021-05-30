@@ -1,26 +1,28 @@
 import {sum} from 'mathjs';
 import {getDuration} from '@utils/transform';
 
-export const getUniqItems = (items) => [...new Set(items)];
+const getUniqItems = (items) => [...new Set(items)];
 
-export const countEventPriceByTypes = (events, type) => {
-  const container = [];
+const countEventPriceByTypes = (events, type) => {
+  const prices = [];
   const filterToTypes = events.filter((event) => event.type === type);
   for (const event of filterToTypes) {
-    container.push(event.basePrice);
+    prices.push(event.basePrice);
   }
-  return sum(container);
+  return sum(prices);
 };
 
-export const countEventsByType = (events, type) => {
+const countEventsByType = (events, type) => {
   return events.filter((event) => event.type === type).length;
 };
 
-export const countEventDurationByTypes = (events, type) => {
-  const container = [];
+const countEventDurationByTypes = (events, type) => {
+  const durations = [];
   const filterToTypes = events.filter((event) => event.type === type);
   for (const event of filterToTypes) {
-    container.push(getDuration(event.dateFrom, event.dateTo));
+    durations.push(getDuration(event.dateFrom, event.dateTo));
   }
-  return sum(container);
+  return sum(durations);
 };
+
+export {getUniqItems, countEventPriceByTypes, countEventsByType, countEventDurationByTypes};

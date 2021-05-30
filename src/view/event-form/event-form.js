@@ -74,7 +74,7 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateFrom) {
-      const date = this._isAdd === true ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH:MM');
+      const date = this._isAdd ? '' : dayjs(this._data.dateFrom).format('DD/MM/YY HH:MM');
 
       this._dateFromPicker = flatpickr(
         this.getElement().querySelector('#event-start-time-1'),
@@ -95,7 +95,7 @@ export default class EventForm extends SmartView {
     }
 
     if(this._data.dateTo) {
-      const date = this._isAdd === true ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH:MM');
+      const date = this._isAdd ? '' : dayjs(this._data.dateTo).format('DD/MM/YY HH:MM');
 
       this._dateToPicker = flatpickr(
         this.getElement().querySelector('#event-end-time-1'),

@@ -3,16 +3,16 @@ import dayjs from 'dayjs';
 
 const currentDate = dayjs();
 
-const futureEvents = (events) => events.filter((event) => dayjs(event.dateFrom) >= currentDate);
-const pastEvents = (events) => events.filter((event) => dayjs(event.dateTo) < currentDate);
-const middleEvents = (events) => events.filter((event) => dayjs(event.dateFrom) < currentDate && dayjs(event.dateTo) >= currentDate);
+const getFutureEvents = (events) => events.filter((event) => dayjs(event.dateFrom) >= currentDate);
+const getPastEvents = (events) => events.filter((event) => dayjs(event.dateTo) < currentDate);
+const getMiddleEvents = (events) => events.filter((event) => dayjs(event.dateFrom) < currentDate && dayjs(event.dateTo) >= currentDate);
 
 export const filter = {
   [FilterType.EVERYTHING]: (events) => events,
   [FilterType.FUTURE]: (events) => {
-    return [].concat(futureEvents(events), middleEvents(events));
+    return [].concat(getFutureEvents(events), getMiddleEvents(events));
   },
   [FilterType.PAST]: (events) => {
-    return [].concat(pastEvents(events), middleEvents(events));
+    return [].concat(getPastEvents(events), getMiddleEvents(events));
   },
 };

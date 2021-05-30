@@ -1,31 +1,27 @@
-export const EVENT_COUNT = 4;
-export const STORE_EVENTS_PREFIX = 'EVENTS';
-export const STORE_DESTINATIONS_PREFIX = 'DESTINATIONS';
-export const STORE_OFFERS_PREFIX = 'OFFERS';
-export const STORE_VER = 'v1';
+const EVENT_COUNT = 4;
+const STORE_EVENTS_PREFIX = 'EVENTS';
+const STORE_DESTINATIONS_PREFIX = 'DESTINATIONS';
+const STORE_OFFERS_PREFIX = 'OFFERS';
+const STORE_VER = 'v1';
 
-export const StoreName = {
+const StoreName = {
   EVENTS: `${STORE_EVENTS_PREFIX}-${STORE_VER}`,
   DESTINATIONS: `${STORE_DESTINATIONS_PREFIX}-${STORE_VER}`,
   OFFERS: `${STORE_OFFERS_PREFIX}-${STORE_VER}`,
 };
 
-export const RenderPosition = {
+const RenderPosition = {
   AFTERBEGIN: 'afterbegin',
   BEFOREEND: 'beforeend',
 };
 
-export const MocksCount = {
-  EVENTS: 20,
-};
-
-export const TimePrefix = {
+const TimePrefix = {
   DAY: 'D',
   HOUR: 'H',
   MINUTE: 'M',
 };
 
-export const TimeMeter = {
+const TimeMeter = {
   YEAR: 2021,
   MONTHES: 12,
   DAYS: 30,
@@ -35,12 +31,12 @@ export const TimeMeter = {
   MILLISECONDS: 1000,
 };
 
-export const TimeMeterInMinutes = {
+const TimeMeterInMinutes = {
   HOUR: 60,
   DAY: 1440,
 };
 
-export const EventType = {
+const EventType = {
   TAXI: 'Taxi',
   BUS: 'Bus',
   TRAIN: 'Train',
@@ -53,13 +49,13 @@ export const EventType = {
   RESTAURANT: 'Restaurant',
 };
 
-export const FilterType = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PAST: 'past',
 };
 
-export const SortType = {
+const SortType = {
   DAY: {
     name: 'day',
     isToggle: true,
@@ -82,43 +78,66 @@ export const SortType = {
   },
 };
 
-export const ButtonType = {
+const ButtonType = {
   OPEN: 'Open',
   CLOSE: 'Close',
   DELETE: 'Delete',
   CANCEL: 'Cancel',
 };
 
-export const KeyCode = {
+const KeyCode = {
   ESC: 27,
   ENTER: 13,
 };
 
-export const EventMode = {
+const EventMode = {
   ITEM: 'ITEM',
   FORM: 'FORM',
 };
 
-export const UserAction = {
+const UserAction = {
   UPDATE_EVENT: 'UPDATE_EVENT',
   ADD_EVENT: 'ADD_EVENT',
   DELETE_EVENT: 'DELETE_EVENT',
 };
 
-export const UpdateType = {
+const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
 };
 
-export const MenuItem = {
+const MenuItem = {
   TABLE: 'TABLE',
   STATS: 'STATS',
 };
 
-export const State = {
+const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
   ABORTING: 'ABORTING',
+};
+
+export {
+  EVENT_COUNT,
+  STORE_EVENTS_PREFIX,
+  STORE_DESTINATIONS_PREFIX,
+  STORE_OFFERS_PREFIX,
+  STORE_VER,
+  StoreName,
+  RenderPosition,
+  TimePrefix,
+  TimeMeter,
+  TimeMeterInMinutes,
+  EventType,
+  FilterType,
+  SortType,
+  ButtonType,
+  KeyCode,
+  EventMode,
+  UserAction,
+  UpdateType,
+  MenuItem,
+  State
 };

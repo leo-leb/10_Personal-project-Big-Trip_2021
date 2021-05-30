@@ -3,44 +3,45 @@ import {TimePrefix, TimeMeterInMinutes as TimeMeter} from '../consts';
 
 const getTimeToString = (time) => {
   const modifiedTime = time.toString();
+
   if (modifiedTime.length === 0) {
     return '00';
   } else if (modifiedTime.length === 1) {
     return '0' + modifiedTime;
-  } else {
-    return modifiedTime;
   }
+
+  return modifiedTime;
 };
 
-export const getDefaultDate = (date) => {
+const getDefaultDate = (date) => {
   return dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 };
 
-export const getFullDate = (date) => {
+const getFullDate = (date) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
 
-export const getShortDate = (date) => {
+const getShortDate = (date) => {
   return dayjs(date).format('MMM DD').toUpperCase();
 };
 
-export const getFullDateAndTime = (date) => {
+const getFullDateAndTime = (date) => {
   return dayjs(date).format('YYYY-MM-DDTHH:mm');
 };
 
-export const getFullDateSlashAndTime = (date) => {
+const getFullDateSlashAndTime = (date) => {
   return dayjs(date).format('DD/MM/YY HH:mm');
 };
 
-export const getTime = (date) => {
+const getTime = (date) => {
   return dayjs(date).format('HH:mm');
 };
 
-export const getDuration = (from, to) => {
+const getDuration = (from, to) => {
   return Math.abs(dayjs(from).diff(dayjs(to), 'minutes'));
 };
 
-export const transformDurationToString = (duration) => {
+const transformDurationToString = (duration) => {
   if (duration < TimeMeter.HOUR) {
     return getTimeToString(duration) + TimePrefix.MINUTE;
   } else if (duration < TimeMeter.DAY) {
@@ -55,10 +56,12 @@ export const transformDurationToString = (duration) => {
   }
 };
 
-export const getTimeInMinutes = (from, to) => {
+const getTimeInMinutes = (from, to) => {
   return Math.abs(dayjs(from).diff(dayjs(to), 'minutes'));
 };
 
-export const stringToClass = (title) => {
+const stringToClass = (title) => {
   return title.toLowerCase().split(' ').join('-');
 };
+
+export {getDefaultDate, getFullDate, getShortDate, getFullDateAndTime, getFullDateSlashAndTime, getTime, getDuration, transformDurationToString, getTimeInMinutes, stringToClass};
